@@ -6,62 +6,85 @@ import datetime
 # 1. 페이지 설정
 st.set_page_config(page_title="Macro Investment Dashboard", layout="wide")
 
-st.title("📈 Global Macro & Market Dashboard")
+st.title("📈 Global Macro & Market Dashboard (5Y)")
+st.markdown(f"Updated: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M')}")
 st.markdown("---")
 
-# 2. 사이드바: 매크로 해석 가이드
+# 2. 사이드바: 상세 매크로 해석 가이드 (요청사항 반영)
 with st.sidebar:
-    st.header("📚 매크로 체크 포인트")
+    st.header("📚 지표 상세 해설")
     
-    with st.expander("1️⃣ 인플레이션 (가장 중요)"):
+    with st.expander("1️⃣ 인플레이션 & 고용 (방향성)"):
         st.markdown("""
-        - **CPI/PCE**: 금리 방향 결정 1번 변수
-        - **체크**: 전월 대비 상승/둔화 여부, Core 하락세 확인
+        **1. CPI (소비자물가지수)**
+        - **정의**: 소비자가 구입하는 상품/서비스의 가격 변동.
+        - **High**: 인플레이션 심화 → 금리 인상 압력 (주가 악재)
+        - **Low**: 디플레이션 우려 or 물가 안정 (주가 호재)
+        
+        **2. Core CPI (근원 소비자물가지수)**
+        - **정의**: 변동성이 큰 식품/에너지를 제외한 물가. 추세 판단에 더 중요.
+        - **해석**: CPI가 내려도 Core가 안 내리면 연준은 금리를 못 내림.
+        
+        **3. Initial Claims (신규 실업수당 청구건수)**
+        - **정의**: 지난주에 해고당해서 실업수당을 처음 신청한 사람 수.
+        - **High**: 고용 시장 침체 → 경기 둔화 (침체 공포)
+        - **Low**: 고용 시장 탄탄함 → 금리 인하 명분 약화
+        
+        **4. Unemployment Rate (실업률)**
+        - **정의**: 일할 의사가 있는데 일자리를 못 구한 비율.
+        - **해석**: 급격히 오르면 경기 침체(Recession) 확정 신호. (가장 중요한 후행지표)
         """)
         
-    with st.expander("2️⃣ 고용 사이클 (침체 신호)"):
+    with st.expander("2️⃣ 금리 & 환율 (자금 흐름)"):
         st.markdown("""
-        - **실업률/실업수당**: 경기 침체 시작점
-        - **체크**: 실업률 방향성, 실업수당 지속 증가 여부
-        """)
+        **1. 10Y-2Y Spread (장단기 금리차)**
+        - **정의**: 10년물 금리에서 2년물 금리를 뺀 값.
+        - **음수(역전)**: 경기 침체 전조 현상 (단기 금리가 더 높음).
+        - **양수 전환**: 침체가 실제로 닥치거나, 경기가 회복될 때 정상화됨.
         
-    with st.expander("3️⃣ 금리 & 실질금리 (중력)"):
-        st.markdown("""
-        - **10Y/2Y**: 자산 가격의 중력
-        - **체크**: 실질금리 하락(호재), 장단기 스프레드 정상화
+        **2. DXY (달러 인덱스)**
+        - **정의**: 주요 6개국 통화 대비 달러의 가치.
+        - **High (>104)**: 달러 강세. 신흥국/한국 자금 이탈 (국장 악재).
+        - **Low (<100)**: 달러 약세. 위험자산 선호 심리 (국장 호재).
+        
+        **3. Real Yield (실질 금리)**
+        - **정의**: 명목 금리(10년물) - 기대 인플레이션. (TIPS 금리)
+        - **해석**: '진짜 돈의 비용'. 실질 금리가 오르면 기술주/성장주 밸류에이션이 급격히 하락함.
         """)
 
-    with st.expander("4️⃣ 유동성 (버티는 힘)"):
+    with st.expander("3️⃣ 유동성 & 경기 (체력)"):
         st.markdown("""
-        - **Fed Balance Sheet**: 유동성 공급/흡수
-        - **체크**: QT 강도, 유동성 환경 변화
+        **1. Fed Balance Sheet (연준 대차대조표)**
+        - **정의**: 연준이 가지고 있는 자산 총액.
+        - **증가**: 양적 완화(Money Printing) → 증시 폭등 요인.
+        - **감소(QT)**: 양적 긴축(돈 회수) → 증시 하방 압력.
+        
+        **2. Retail Sales (소매 판매)**
+        - **정의**: 백화점, 마트 등에서의 매출액 변화 (미국 GDP의 70%는 소비).
+        - **High**: 경기가 너무 뜨거움 → 인플레 재점화 우려.
+        - **Low**: 소비 위축 → 경기 침체 우려. (적당한 2~3% 성장이 베스트)
         """)
 
-    with st.expander("5️⃣ 환율 (자금 흐름)"):
+    with st.expander("4️⃣ 스트레스 (위기 신호)"):
         st.markdown("""
-        - **DXY/원달러**: 글로벌 자금 이동
-        - **체크**: 달러 강세(리스크 압박), 원화 약세(국장 불리)
-        """)
-
-    with st.expander("6️⃣ 경기 체감 (실물)"):
-        st.markdown("""
-        - **PMI/소매판매**: 실물 체력
-        - **체크**: 50 상회/하회, 제조업 회복 신호
-        """)
-
-    with st.expander("7️⃣ 스트레스 신호 (경보등)"):
-        st.markdown("""
-        - **VIX/High Yield**: 위기 감지기
-        - **체크**: HY 스프레드 확대 = 위험 진입
+        **1. VIX (변동성 지수)**
+        - **정의**: S&P500 옵션에 반영된 향후 30일간의 변동성 기대치.
+        - **High (>30)**: 공포 구간. 투매가 나옴 (역발상 매수 기회).
+        - **Low (<20)**: 시장이 평온함 (탐욕 구간).
+        
+        **2. High Yield Spread (하이일드 스프레드)**
+        - **정의**: 신용등급 낮은 회사채 금리 - 국채 금리 차이.
+        - **해석**: 이 수치가 치솟으면 기업들이 돈을 못 빌려 부도 위기라는 뜻. (경제 위기의 가장 정확한 신호)
         """)
     
-    st.info("데이터 출처: Yahoo Finance & FRED(St. Louis Fed)")
+    st.info("데이터: Yahoo Finance & FRED (최근 5년)")
 
-# 3. 데이터 가져오기 함수 (Direct CSV 방식 - 에러 해결)
-@st.cache_data(ttl=3600*12) # 12시간마다 갱신
+# 3. 데이터 가져오기 함수 (5년으로 확장)
+@st.cache_data(ttl=3600*12) 
 def get_macro_data():
     end = datetime.datetime.now()
-    start = end - datetime.timedelta(days=365*2) # 최근 2년
+    # [수정됨] 최근 5년 데이터 (days=365*5)
+    start = end - datetime.timedelta(days=365*5) 
     
     data = {}
     
@@ -79,7 +102,6 @@ def get_macro_data():
         try:
             df = yf.download(ticker, start=start, end=end, progress=False)
             if not df.empty:
-                # Yahoo 데이터 구조 처리
                 if isinstance(df.columns, pd.MultiIndex):
                      df = df['Close']
                 else:
@@ -88,7 +110,7 @@ def get_macro_data():
         except:
             pass
 
-    # B. FRED 데이터 (Direct CSV Download 방식)
+    # B. FRED 데이터 (Direct CSV 방식)
     fred_tickers = {
         'CPI (YoY)': 'CPIAUCSL',
         'Core CPI (YoY)': 'CPILFESL',
@@ -103,14 +125,11 @@ def get_macro_data():
     
     for name, code in fred_tickers.items():
         try:
-            # 라이브러리 없이 FRED 웹사이트에서 직접 CSV 다운로드 (호환성 문제 해결)
             url = f"https://fred.stlouisfed.org/graph/fredgraph.csv?id={code}"
             df = pd.read_csv(url, index_col=0, parse_dates=True)
+            df = df.loc[start:] # 5년치로 자르기
             
-            # 날짜 필터링
-            df = df.loc[start:]
-            
-            # YoY 계산
+            # YoY 계산 (CPI, 소매판매)
             if name in ['CPI (YoY)', 'Core CPI (YoY)', 'Retail Sales']:
                 df = df.pct_change(periods=12) * 100
             
@@ -120,22 +139,18 @@ def get_macro_data():
             
     return data
 
-# 데이터 로딩
-with st.spinner('FRED 및 Yahoo Finance에서 데이터를 수집 중입니다...'):
+with st.spinner('최근 5년치 데이터를 수집 중입니다...'):
     macro_data = get_macro_data()
 
 # 4. 화면 표시 함수
 def display_metric_and_chart(name, format_str="{:.2f}"):
     if name in macro_data and not macro_data[name].empty:
         series = macro_data[name]
-        # Series 변환
         if isinstance(series, pd.DataFrame):
             series = series.iloc[:, 0]
             
-        # 최신 값 추출
         current_val = series.iloc[-1]
         
-        # 전일/전월 대비 변화량
         if len(series) >= 2:
             prev_val = series.iloc[-2]
             delta = current_val - prev_val
@@ -143,15 +158,15 @@ def display_metric_and_chart(name, format_str="{:.2f}"):
             delta = 0
         
         st.metric(label=name, value=format_str.format(current_val), delta=format_str.format(delta))
-        st.line_chart(series, height=200)
+        st.line_chart(series, height=200) # 5년치 그래프가 그려짐
     else:
         st.warning(f"{name} 데이터 로드 실패")
 
-# 5. 메인 대시보드 레이아웃
+# 5. 메인 대시보드 레이아웃 (탭 구성)
 tab1, tab2, tab3, tab4 = st.tabs(["🔥 인플레/고용", "💰 금리/환율", "🏦 유동성/경기", "🚨 스트레스"])
 
 with tab1:
-    st.subheader("1️⃣ 인플레이션 & 2️⃣ 고용")
+    st.subheader("인플레이션 & 고용 지표 (5 Year)")
     col1, col2 = st.columns(2)
     with col1:
         display_metric_and_chart('CPI (YoY)', "{:.2f}%")
@@ -161,23 +176,19 @@ with tab1:
         display_metric_and_chart('Initial Claims', "{:.0f}")
 
 with tab2:
-    st.subheader("3️⃣ 금리 & 5️⃣ 환율")
+    st.subheader("금리 & 환율 지표 (5 Year)")
     col1, col2 = st.columns(2)
     with col1:
-        if 'US 10Y Yield' in macro_data:
-            s = macro_data['US 10Y Yield']
-            val = s.iloc[-1].item()
-            # Yahoo 데이터 40.0 -> 4.0% 보정
-            if val > 10: val = val / 10
-            
-            # 전일 대비
-            prev = s.iloc[-2].item()
-            if prev > 10: prev = prev / 10
-            delta = val - prev
-            
-            st.metric("US 10Y Yield", f"{val:.2f}%", f"{delta:.2f}%p")
-            st.line_chart(s)
-            
+        # 장단기 금리차 계산 로직 추가
+        if 'US 10Y Yield' in macro_data and 'US 2Y Yield' in macro_data:
+             # Yahoo 데이터 기반 실시간 스프레드 계산 (보조)
+             t10 = macro_data['US 10Y Yield'].iloc[-1].item()
+             if t10 > 10: t10 /= 10
+             t2 = macro_data['US 2Y Yield'].iloc[-1].item()
+             if t2 > 10: t2 /= 10
+             
+             st.metric("US 10Y Treasury", f"{t10:.2f}%")
+             
         display_metric_and_chart('10Y-2Y Spread', "{:.2f}")
         display_metric_and_chart('Real Yield (10Y)', "{:.2f}%")
 
@@ -186,7 +197,7 @@ with tab2:
         display_metric_and_chart('KRW/USD', "{:.2f} 원")
 
 with tab3:
-    st.subheader("4️⃣ 유동성 & 6️⃣ 경기")
+    st.subheader("유동성 & 경기 지표 (5 Year)")
     col1, col2 = st.columns(2)
     with col1:
         display_metric_and_chart('Fed Balance Sheet', "{:.0f}")
@@ -194,14 +205,13 @@ with tab3:
         display_metric_and_chart('Retail Sales', "{:.2f}% (YoY)")
 
 with tab4:
-    st.subheader("7️⃣ 스트레스 신호 (리스크 관리)")
+    st.subheader("스트레스 & 리스크 지표 (5 Year)")
     col1, col2 = st.columns(2)
     with col1:
         display_metric_and_chart('VIX', "{:.2f}")
     with col2:
         display_metric_and_chart('High Yield Spread', "{:.2f}%")
 
-# 새로고침
 if st.button("데이터 최신화"):
     st.cache_data.clear()
     st.rerun()
