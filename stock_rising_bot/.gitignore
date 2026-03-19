@@ -1,0 +1,10 @@
+.env
+__pycache__/
+*.pyc
+.venv/
+logs/
+
+# generated data files
+data/raw/*.csv
+data/processed/*.csv
+data/output/*.md
