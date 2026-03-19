@@ -1,0 +1,4 @@
+pandas
+pykrx
+python-dotenv
+openpyxl
