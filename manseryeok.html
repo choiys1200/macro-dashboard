@@ -16,74 +16,76 @@
   · 년주: 입춘 기준 / 월주: 절기 기준 / 일주: 율리우스일 / 시주: 시두법
 ============================================================ -->
 <style>
-#msr-app{max-width:720px;margin:0 auto;padding:16px;font-family:'Apple SD Gothic Neo','Noto Sans KR','Malgun Gothic',sans-serif;color:#26303a;line-height:1.55;box-sizing:border-box}
+#msr-app{max-width:760px;margin:0 auto;padding:16px;font-family:'Apple SD Gothic Neo','Noto Sans KR','Malgun Gothic',sans-serif;color:#26303a;line-height:1.55;box-sizing:border-box}
 #msr-app *,#msr-app *::before,#msr-app *::after{box-sizing:border-box}
-#msr-app .msr-card{background:#fff;border:1px solid #e3e8ee;border-radius:14px;padding:20px;margin-bottom:16px;box-shadow:0 1px 4px rgba(20,40,70,.06)}
-#msr-app h2{margin:0 0 4px;font-size:1.35rem}
-#msr-app .msr-sub{margin:0 0 16px;font-size:.85rem;color:#7b8794}
+#msr-app .msr-card{background:#fff;border:1px solid #e3e8ee;border-radius:14px;padding:24px;margin-bottom:16px;box-shadow:0 1px 4px rgba(20,40,70,.06)}
+#msr-app h2{margin:0 0 6px;font-size:1.55rem}
+#msr-app .msr-sub{margin:0 0 18px;font-size:.95rem;color:#7b8794}
 #msr-app .msr-row{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px}
 #msr-app .msr-field{display:flex;flex-direction:column;gap:4px}
-#msr-app .msr-field label{font-size:.78rem;font-weight:600;color:#55606c}
-#msr-app input[type=number],#msr-app select{padding:8px 10px;border:1px solid #cfd7e0;border-radius:8px;font-size:.95rem;background:#fff;color:#26303a}
-#msr-app input[type=number]{width:86px}
-#msr-app .msr-opts{display:flex;flex-wrap:wrap;gap:14px;margin:4px 0 14px;font-size:.85rem;color:#444;align-items:center}
+#msr-app .msr-field label{font-size:.86rem;font-weight:600;color:#55606c}
+#msr-app input[type=number],#msr-app select{padding:9px 11px;border:1px solid #cfd7e0;border-radius:8px;font-size:1.05rem;background:#fff;color:#26303a}
+#msr-app input[type=number]{width:96px}
+#msr-app .msr-opts{display:flex;flex-wrap:wrap;gap:14px;margin:4px 0 14px;font-size:.94rem;color:#444;align-items:center}
 #msr-app .msr-opts label{display:flex;align-items:center;gap:5px;cursor:pointer}
 #msr-app .msr-ac{position:relative;display:inline-block}
-#msr-app .msr-ac input{width:130px;padding:6px 10px;border:1px solid #cfd7e0;border-radius:8px;font-size:.9rem}
+#msr-app .msr-ac input{width:150px;padding:8px 11px;border:1px solid #cfd7e0;border-radius:8px;font-size:1rem}
 #msr-app .msr-ac-list{position:absolute;top:100%;left:0;right:0;z-index:50;background:#fff;border:1px solid #cfd7e0;border-radius:8px;margin-top:2px;max-height:220px;overflow-y:auto;box-shadow:0 4px 12px rgba(20,40,70,.15);display:none}
-#msr-app .msr-ac-item{padding:7px 12px;cursor:pointer;font-size:.88rem}
+#msr-app .msr-ac-item{padding:8px 13px;cursor:pointer;font-size:.95rem}
 #msr-app .msr-ac-item:hover{background:#eef2f8}
 #msr-app .msr-ac-item small{color:#8a94a0;margin-left:6px}
-#msr-app .msr-region-info{font-size:.76rem;color:#8a94a0}
-#msr-app button.msr-btn{width:100%;padding:12px;border:none;border-radius:10px;background:#31456b;color:#fff;font-size:1.02rem;font-weight:700;cursor:pointer}
+#msr-app .msr-region-info{font-size:.84rem;color:#8a94a0}
+#msr-app button.msr-btn{width:100%;padding:14px;border:none;border-radius:10px;background:#31456b;color:#fff;font-size:1.15rem;font-weight:700;cursor:pointer}
 #msr-app button.msr-btn:hover{background:#3d5583}
-#msr-app .msr-err{color:#c62828;font-size:.88rem;margin-top:10px;display:none}
-#msr-app .msr-summary{font-size:.95rem;margin-bottom:14px}
+#msr-app .msr-err{color:#c62828;font-size:.95rem;margin-top:10px;display:none}
+#msr-app .msr-summary{font-size:1.08rem;margin-bottom:16px}
 #msr-app .msr-summary b{color:#31456b}
 #msr-app table.msr-pillars{width:100%;border-collapse:collapse;table-layout:fixed;text-align:center}
-#msr-app table.msr-pillars th{font-size:.82rem;padding:6px 2px;color:#55606c;border-bottom:1px solid #e3e8ee;font-weight:600}
+#msr-app table.msr-pillars th{font-size:.92rem;padding:6px 2px;color:#55606c;border-bottom:1px solid #e3e8ee;font-weight:600}
 #msr-app table.msr-pillars td{padding:5px 3px;vertical-align:middle}
-#msr-app .msr-ten{font-size:.74rem;color:#7b8794}
-#msr-app .msr-char{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;width:56px;height:56px;border-radius:10px;color:#fff;font-weight:700;line-height:1.1}
-#msr-app .msr-char .k{font-size:1.35rem}
-#msr-app .msr-char .h{font-size:.68rem;opacity:.9;font-weight:500}
-#msr-app .msr-jj{font-size:.72rem;color:#7b8794;letter-spacing:1px}
+#msr-app .msr-ten{font-size:.84rem;color:#7b8794}
+#msr-app .msr-char{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;width:68px;height:68px;border-radius:10px;color:#fff;font-weight:700;line-height:1.1}
+#msr-app .msr-char .k{font-size:1.65rem}
+#msr-app .msr-char .h{font-size:.8rem;opacity:.9;font-weight:500}
+#msr-app .msr-jj{font-size:.82rem;color:#7b8794;letter-spacing:1px}
 #msr-app .msr-e0{background:#2e7d32}
 #msr-app .msr-e1{background:#c62828}
 #msr-app .msr-e2{background:#b8860b}
 #msr-app .msr-e3{background:#78848f}
 #msr-app .msr-e4{background:#1a2f6e}
 #msr-app .msr-none{color:#aab3bd;font-size:.9rem}
-#msr-app h3{font-size:1rem;margin:0 0 10px;color:#31456b}
-#msr-app .msr-pillar-desc{margin:14px 0 0;padding:0;list-style:none;font-size:.8rem;color:#55606c;line-height:1.7}
+#msr-app h3{font-size:1.2rem;margin:0 0 12px;color:#31456b}
+#msr-app .msr-pillar-desc{margin:16px 0 0;padding:0;list-style:none;font-size:.9rem;color:#55606c;line-height:1.7}
 #msr-app .msr-pillar-desc b{color:#31456b}
-#msr-app table.msr-anal{width:100%;border-collapse:collapse;font-size:.85rem;text-align:center;margin-bottom:6px}
-#msr-app table.msr-anal th{padding:6px 4px;color:#55606c;font-weight:600;border-bottom:1px solid #e3e8ee;font-size:.8rem}
-#msr-app table.msr-anal td{padding:6px 4px;border-bottom:1px solid #f1f4f8}
-#msr-app .msr-anal-sum{font-size:.86rem;margin:10px 0 2px}
+#msr-app table.msr-anal{width:100%;border-collapse:collapse;font-size:.95rem;text-align:center;margin-bottom:6px}
+#msr-app table.msr-anal th{padding:9px 6px;color:#55606c;font-weight:600;border-bottom:1px solid #e3e8ee;font-size:.88rem}
+#msr-app table.msr-anal td{padding:9px 6px;border-bottom:1px solid #f1f4f8}
+#msr-app .msr-anal-sum{font-size:.96rem;margin:10px 0 2px}
 #msr-app .msr-anal-sum b{color:#31456b}
-#msr-app .msr-badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:.75rem;font-weight:600;background:#eef1f5;color:#55606c}
-#msr-app .msr-badge.b0{background:#fdecea;color:#c62828}
+#msr-app .msr-badge{display:inline-block;padding:3px 11px;border-radius:11px;font-size:.84rem;font-weight:600;background:#eef1f5;color:#55606c}
+#msr-app .msr-badge.b0{background:#eef1f5;color:#7b8794}
 #msr-app .msr-badge.b1{background:#fff4e0;color:#b26a00}
-#msr-app .msr-badge.b3{background:#e3edfb;color:#1565c0}
+#msr-app .msr-badge.b2{background:#e3edfb;color:#1565c0}
+#msr-app .msr-badge.b3{background:#fdecea;color:#c62828}
+#msr-app .msr-anal-h{font-size:1.02rem;color:#31456b;margin:0 0 8px;font-weight:700}
 #msr-app .msr-cycle-wrap{text-align:center}
-#msr-app .msr-cycle-wrap svg{max-width:340px;width:100%;height:auto}
-#msr-app .msr-cycle-legend{font-size:.8rem;color:#55606c;margin-top:4px}
+#msr-app .msr-cycle-wrap svg{max-width:430px;width:100%;height:auto}
+#msr-app .msr-cycle-legend{font-size:.9rem;color:#55606c;margin-top:4px}
 #msr-app .msr-cycle-legend .lg{display:inline-block;width:26px;height:0;border-top:3px solid #55606c;vertical-align:middle;margin:0 4px}
 #msr-app .msr-cycle-legend .lr{display:inline-block;width:26px;height:0;border-top:3px dashed #c62828;vertical-align:middle;margin:0 4px}
-#msr-app .msr-gloss{margin:0;font-size:.82rem;line-height:1.65;color:#444;display:grid;grid-template-columns:1fr 1fr;gap:6px 18px}
+#msr-app .msr-gloss{margin:0;font-size:.92rem;line-height:1.65;color:#444;display:grid;grid-template-columns:1fr 1fr;gap:6px 18px}
 #msr-app .msr-gloss div b{color:#31456b}
 @media (max-width:560px){ #msr-app .msr-gloss{grid-template-columns:1fr} }
-#msr-app .msr-note{font-size:.76rem;color:#8a94a0;margin-top:6px;line-height:1.6}
-#msr-app .msr-help{font-size:.78rem;color:#8a94a0;line-height:1.6;margin:0 0 14px;padding:10px 12px;background:#f6f8fa;border-radius:8px}
+#msr-app .msr-note{font-size:.82rem;color:#8a94a0;margin-top:6px;line-height:1.6}
+#msr-app .msr-help{font-size:.87rem;color:#8a94a0;line-height:1.6;margin:0 0 14px;padding:10px 12px;background:#f6f8fa;border-radius:8px}
 #msr-app .msr-help b{color:#55606c}
 #msr-app #msr-result{display:none}
 @media (max-width:480px){
   #msr-app{padding:8px}
   #msr-app .msr-card{padding:14px}
-  #msr-app .msr-char{width:46px;height:46px}
-  #msr-app .msr-char .k{font-size:1.1rem}
-  #msr-app input[type=number]{width:72px}
+  #msr-app .msr-char{width:56px;height:56px}
+  #msr-app .msr-char .k{font-size:1.35rem}
+  #msr-app input[type=number]{width:80px}
 }
 </style>
 
@@ -613,7 +615,8 @@ function render(r, opts){
     return '<span class="msr-badge b' + L + '">' + ['없음','적음','보통','많음'][L] + '</span>';
   }
 
-  var html = '<table class="msr-anal"><tr><th>오행</th><th>개수</th><th>비율</th><th>판정</th></tr>';
+  var html = '<h4 class="msr-anal-h">오행 분석</h4>';
+  html += '<table class="msr-anal"><tr><th>오행</th><th>개수</th><th>비율</th><th>판정</th></tr>';
   for (var e = 0; e < 5; e++){
     html += '<tr><td style="font-weight:700;color:' + ELEM_COLOR[e] + '">' + ELEM_K[e] + '</td>' +
       '<td>' + cnt[e] + '개</td><td>' + Math.round(cnt[e] / total * 100) + '%</td><td>' + badge(cnt[e]) + '</td></tr>';
@@ -621,7 +624,8 @@ function render(r, opts){
   html += '</table>';
 
   var GROUPS = [['비겁',['비견','겁재']],['식상',['식신','상관']],['재성',['편재','정재']],['관성',['편관','정관']],['인성',['편인','정인']]];
-  html += '<table class="msr-anal" style="margin-top:14px"><tr><th>십성</th><th>구성</th><th>합계</th><th>판정</th></tr>';
+  html += '<h4 class="msr-anal-h" style="margin-top:22px">십성 분석</h4>';
+  html += '<table class="msr-anal"><tr><th>십성</th><th>구성</th><th>합계</th><th>판정</th></tr>';
   var groupSums = [], maxGV = -1;
   for (var g = 0; g < 5; g++){
     var a = GROUPS[g][1], n1 = tenCnt[a[0]], n2 = tenCnt[a[1]], s = n1 + n2;
@@ -648,9 +652,9 @@ function render(r, opts){
   $('msr-cycle').innerHTML = buildCycleSVG(cnt, total);
 }
 
-/* 오행 5개를 원형(오각형)으로 배치: 바깥 실선 화살표 = 생, 안쪽 점선 화살표 = 극 */
+/* 오행 5개를 원형(오각형)으로 배치: 바깥 실선 직선 화살표 = 생, 안쪽 점선 화살표 = 극 */
 function buildCycleSVG(cnt, total){
-  var W = 340, H = 336, cx = 170, cy = 171, R = 112, r = 38;
+  var W = 420, H = 416, cx = 210, cy = 211, R = 140, r = 48;
   var pos = [];
   for (var i = 0; i < 5; i++){
     var a = (-90 + i * 72) * Math.PI / 180;
@@ -662,25 +666,22 @@ function buildCycleSVG(cnt, total){
   }
   var svg = '<svg viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="오행 상생 상극 관계도">';
   svg += '<defs>' +
-    '<marker id="msrAG" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#55606c"/></marker>' +
-    '<marker id="msrAR" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#c62828"/></marker>' +
+    '<marker id="msrAG" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto"><path d="M0,0 L8,3.5 L0,7 Z" fill="#55606c"/></marker>' +
+    '<marker id="msrAR" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto"><path d="M0,0 L8,3.5 L0,7 Z" fill="#c62828"/></marker>' +
     '</defs>';
-  /* 생(生): 목→화→토→금→수→목, 바깥쪽으로 살짝 휘는 곡선 */
+  /* 생(生): 목→화→토→금→수→목, 이웃 노드를 잇는 직선 화살표 */
   for (i = 0; i < 5; i++){
     var A = pos[i], B = pos[(i + 1) % 5];
-    var s = edgePoint(A, B, r + 4), t = edgePoint(B, A, r + 12);
-    var mx = (s[0] + t[0]) / 2, my = (s[1] + t[1]) / 2;
-    var ox = mx - cx, oy = my - cy, ol = Math.sqrt(ox * ox + oy * oy);
-    var qx = mx + ox / ol * 32, qy = my + oy / ol * 32;
-    svg += '<path d="M' + s[0].toFixed(1) + ',' + s[1].toFixed(1) + ' Q' + qx.toFixed(1) + ',' + qy.toFixed(1) +
-      ' ' + t[0].toFixed(1) + ',' + t[1].toFixed(1) + '" fill="none" stroke="#55606c" stroke-width="2.2" marker-end="url(#msrAG)"/>';
+    var s = edgePoint(A, B, r + 5), t = edgePoint(B, A, r + 14);
+    svg += '<line x1="' + s[0].toFixed(1) + '" y1="' + s[1].toFixed(1) + '" x2="' + t[0].toFixed(1) + '" y2="' + t[1].toFixed(1) +
+      '" stroke="#55606c" stroke-width="2.8" marker-end="url(#msrAG)"/>';
   }
   /* 극(剋): 목→토, 화→금, 토→수, 금→목, 수→화 (안쪽 별 모양 점선) */
   for (i = 0; i < 5; i++){
     var A2 = pos[i], B2 = pos[(i + 2) % 5];
-    var s2 = edgePoint(A2, B2, r + 4), t2 = edgePoint(B2, A2, r + 12);
+    var s2 = edgePoint(A2, B2, r + 5), t2 = edgePoint(B2, A2, r + 14);
     svg += '<line x1="' + s2[0].toFixed(1) + '" y1="' + s2[1].toFixed(1) + '" x2="' + t2[0].toFixed(1) + '" y2="' + t2[1].toFixed(1) +
-      '" stroke="#c62828" stroke-width="2" stroke-dasharray="6 5" opacity="0.8" marker-end="url(#msrAR)"/>';
+      '" stroke="#c62828" stroke-width="2.2" stroke-dasharray="7 6" opacity="0.8" marker-end="url(#msrAR)"/>';
   }
   /* 오행 노드: 사주에 있으면 오행 색, 없으면 회색 점선 */
   for (i = 0; i < 5; i++){
@@ -690,10 +691,10 @@ function buildCycleSVG(cnt, total){
     var pct = Math.round(cnt[i] / total * 100);
     svg += '<circle cx="' + pos[i][0].toFixed(1) + '" cy="' + pos[i][1].toFixed(1) + '" r="' + r + '" fill="' + fill + '"' +
       (has ? '' : ' stroke="#c9d1da" stroke-width="1.5" stroke-dasharray="4 3"') + '/>';
-    svg += '<text x="' + pos[i][0].toFixed(1) + '" y="' + (pos[i][1] - 4).toFixed(1) +
-      '" text-anchor="middle" font-size="15" font-weight="700" fill="' + tcol + '">' + ELEM_K[i] + '</text>';
-    svg += '<text x="' + pos[i][0].toFixed(1) + '" y="' + (pos[i][1] + 16).toFixed(1) +
-      '" text-anchor="middle" font-size="13" fill="' + tcol + '">' + pct + '%</text>';
+    svg += '<text x="' + pos[i][0].toFixed(1) + '" y="' + (pos[i][1] - 5).toFixed(1) +
+      '" text-anchor="middle" font-size="19" font-weight="700" fill="' + tcol + '">' + ELEM_K[i] + '</text>';
+    svg += '<text x="' + pos[i][0].toFixed(1) + '" y="' + (pos[i][1] + 20).toFixed(1) +
+      '" text-anchor="middle" font-size="16" fill="' + tcol + '">' + pct + '%</text>';
   }
   svg += '</svg>';
   return svg;
