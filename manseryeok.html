@@ -75,12 +75,13 @@
 #msr-app .msr-cycle-legend .lr{display:inline-block;width:26px;height:0;border-top:3px dashed #c62828;vertical-align:middle;margin:0 4px}
 #msr-app .msr-gloss-intro{font-size:.92rem;line-height:1.65;color:#444;margin:0 0 14px}
 #msr-app .msr-gloss-intro b{color:#31456b}
-#msr-app .msr-gloss{margin:0;font-size:.92rem;line-height:1.65;color:#444;display:grid;grid-template-columns:1fr 1fr;gap:14px 22px}
-#msr-app .msr-gloss div b{color:#31456b}
-#msr-app .msr-gloss ul{margin:4px 0 0;padding:0;list-style:none}
-#msr-app .msr-gloss li{padding-left:16px;position:relative}
-#msr-app .msr-gloss li::before{content:'–';position:absolute;left:2px;color:#8a94a0}
-@media (max-width:560px){ #msr-app .msr-gloss{grid-template-columns:1fr} }
+#msr-app table.msr-gloss{width:100%;border-collapse:collapse;font-size:.92rem;line-height:1.55;color:#444}
+#msr-app table.msr-gloss th{padding:9px 8px;color:#55606c;font-weight:600;border-bottom:1px solid #e3e8ee;font-size:.88rem;text-align:center}
+#msr-app table.msr-gloss td{padding:10px 8px;border-bottom:1px solid #f1f4f8;vertical-align:middle;text-align:left;word-break:keep-all}
+#msr-app table.msr-gloss td.g{width:27%;text-align:center;border-right:1px solid #f1f4f8}
+#msr-app table.msr-gloss td.g b{color:#31456b;font-size:.98rem}
+#msr-app table.msr-gloss td.g span{display:block;font-size:.8rem;color:#8a94a0;margin-top:2px}
+#msr-app table.msr-gloss td.n{width:17%;text-align:center;font-weight:700;color:#31456b;white-space:nowrap}
 #msr-app .msr-note{font-size:.82rem;color:#8a94a0;margin-top:6px;line-height:1.6}
 #msr-app .msr-help{font-size:.87rem;color:#8a94a0;line-height:1.6;margin:0 0 14px;padding:10px 12px;background:#f6f8fa;border-radius:8px}
 #msr-app .msr-help b{color:#55606c}
@@ -91,6 +92,11 @@
   #msr-app .msr-char{width:56px;height:56px}
   #msr-app .msr-char .k{font-size:1.35rem}
   #msr-app input[type=number]{width:80px}
+  #msr-app table.msr-gloss{font-size:.84rem}
+  #msr-app table.msr-gloss td{padding:8px 5px}
+  #msr-app table.msr-gloss td.g b{font-size:.88rem}
+  #msr-app table.msr-gloss td.g span{font-size:.73rem}
+  #msr-app table.msr-gloss td.n{font-size:.84rem;white-space:normal}
 }
 </style>
 
@@ -175,38 +181,34 @@
     <div class="msr-card">
       <h3>십성(十星) 용어 풀이</h3>
       <p class="msr-gloss-intro"><b>일간(본원)</b> — 사주의 주인공인 나 자신입니다. 나머지 글자들은 일간과의 관계에 따라 아래 다섯 그룹(열 가지 십성)으로 나뉩니다.</p>
-      <div class="msr-gloss">
-        <div><b>비겁(比劫)</b> — 나와 같은 오행. 자아·형제·동료·경쟁의 기운입니다.
-          <ul>
-            <li><b>비견(比肩)</b>: 음양까지 같은 기운. 자립심과 주관, 든든한 동료.</li>
-            <li><b>겁재(劫財)</b>: 음양이 다른 기운. 승부욕과 과감한 실행력, 재물 경쟁.</li>
-          </ul>
-        </div>
-        <div><b>식상(食傷)</b> — 내가 만들어내는 오행. 표현·재능·의식주의 기운입니다.
-          <ul>
-            <li><b>식신(食神)</b>: 꾸준한 재능과 표현, 여유와 먹을 복.</li>
-            <li><b>상관(傷官)</b>: 틀을 깨는 언변과 창의력, 예리한 비판 정신.</li>
-          </ul>
-        </div>
-        <div><b>재성(財星)</b> — 내가 다스리는 오행. 재물과 현실 감각의 기운입니다.
-          <ul>
-            <li><b>편재(偏財)</b>: 유동적인 큰돈, 사업 수완과 넓은 대인관계.</li>
-            <li><b>정재(正財)</b>: 안정적인 재물, 성실함과 계획적인 관리.</li>
-          </ul>
-        </div>
-        <div><b>관성(官星)</b> — 나를 다스리는 오행. 명예·직장·책임의 기운입니다.
-          <ul>
-            <li><b>편관(偏官)</b>: 도전과 시련을 이겨내는 카리스마와 결단력.</li>
-            <li><b>정관(正官)</b>: 원칙과 신용, 안정된 조직·직장운.</li>
-          </ul>
-        </div>
-        <div><b>인성(印星)</b> — 나를 도와주는 오행. 학문·수용·보호의 기운입니다.
-          <ul>
-            <li><b>편인(偏印)</b>: 직관과 독특한 재능, 한 분야에 대한 깊은 몰입.</li>
-            <li><b>정인(正印)</b>: 학문과 문서운, 어머니 같은 수용력.</li>
-          </ul>
-        </div>
-      </div>
+      <table class="msr-gloss">
+        <tr><th>그룹</th><th>십성</th><th>의미</th></tr>
+        <tr>
+          <td class="g" rowspan="2"><b>비겁(比劫)</b><span>나와 같은 오행<br>자아·동료·경쟁</span></td>
+          <td class="n">비견(比肩)</td><td>음양까지 같은 기운. 자립심과 주관, 든든한 동료.</td>
+        </tr>
+        <tr><td class="n">겁재(劫財)</td><td>음양이 다른 기운. 승부욕과 과감한 실행력, 재물 경쟁.</td></tr>
+        <tr>
+          <td class="g" rowspan="2"><b>식상(食傷)</b><span>내가 만들어내는 오행<br>표현·재능·의식주</span></td>
+          <td class="n">식신(食神)</td><td>꾸준한 재능과 표현, 여유와 먹을 복.</td>
+        </tr>
+        <tr><td class="n">상관(傷官)</td><td>틀을 깨는 언변과 창의력, 예리한 비판 정신.</td></tr>
+        <tr>
+          <td class="g" rowspan="2"><b>재성(財星)</b><span>내가 다스리는 오행<br>재물·현실 감각</span></td>
+          <td class="n">편재(偏財)</td><td>유동적인 큰돈, 사업 수완과 넓은 대인관계.</td>
+        </tr>
+        <tr><td class="n">정재(正財)</td><td>안정적인 재물, 성실함과 계획적인 관리.</td></tr>
+        <tr>
+          <td class="g" rowspan="2"><b>관성(官星)</b><span>나를 다스리는 오행<br>명예·직장·책임</span></td>
+          <td class="n">편관(偏官)</td><td>도전과 시련을 이겨내는 카리스마와 결단력.</td>
+        </tr>
+        <tr><td class="n">정관(正官)</td><td>원칙과 신용, 안정된 조직·직장운.</td></tr>
+        <tr>
+          <td class="g" rowspan="2"><b>인성(印星)</b><span>나를 도와주는 오행<br>학문·수용·보호</span></td>
+          <td class="n">편인(偏印)</td><td>직관과 독특한 재능, 한 분야에 대한 깊은 몰입.</td>
+        </tr>
+        <tr><td class="n">정인(正印)</td><td>학문과 문서운, 어머니 같은 수용력.</td></tr>
+      </table>
       <p class="msr-note">
         · 년주는 입춘, 월주는 절기(절입) 시각 기준으로 계산합니다. 절입 시각 전후 수 분 이내 출생이라면 전문 만세력과 대조해 주세요.<br>
         · 1908~1911년, 1954~1961년의 표준시(UTC+8:30)와 서머타임(1948~1960, 1987~1988) 시행 기간은 자동 보정됩니다.<br>
