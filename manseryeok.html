@@ -82,6 +82,10 @@
 #msr-app table.msr-gloss td.g b{color:#31456b;font-size:.98rem}
 #msr-app table.msr-gloss td.g span{display:block;font-size:.8rem;color:#8a94a0;margin-top:2px}
 #msr-app table.msr-gloss td.n{width:17%;text-align:center;font-weight:700;color:#31456b;white-space:nowrap}
+#msr-app table.msr-gloss tr.msr-hl td{background:#fff4d8}
+#msr-app table.msr-gloss tr.msr-hl td.n{color:#a04b00}
+#msr-app .msr-tencnt{display:none;margin-left:6px;padding:1px 8px;border-radius:9px;background:#c62828;color:#fff;font-size:.76rem;font-weight:700;vertical-align:middle}
+#msr-app tr.msr-hl .msr-tencnt{display:inline-block}
 #msr-app .msr-note{font-size:.82rem;color:#8a94a0;margin-top:6px;line-height:1.6}
 #msr-app .msr-help{font-size:.87rem;color:#8a94a0;line-height:1.6;margin:0 0 14px;padding:10px 12px;background:#f6f8fa;border-radius:8px}
 #msr-app .msr-help b{color:#55606c}
@@ -180,34 +184,34 @@
 
     <div class="msr-card">
       <h3>십성(十星) 용어 풀이</h3>
-      <p class="msr-gloss-intro"><b>일간(본원)</b> — 사주의 주인공인 나 자신입니다. 나머지 글자들은 일간과의 관계에 따라 아래 다섯 그룹(열 가지 십성)으로 나뉩니다.</p>
+      <p class="msr-gloss-intro"><b>일간(본원)</b> — 사주의 주인공인 나 자신입니다. 나머지 글자들은 일간과의 관계에 따라 아래 다섯 그룹(열 가지 십성)으로 나뉩니다. 계산 결과 내 사주에 있는 십성은 <b>색으로 강조되고 개수</b>가 함께 표시됩니다.</p>
       <table class="msr-gloss">
         <tr><th>그룹</th><th>십성</th><th>의미</th></tr>
-        <tr>
+        <tr data-ten="비견">
           <td class="g" rowspan="2"><b>비겁(比劫)</b><span>나와 같은 오행<br>자아·동료·경쟁</span></td>
-          <td class="n">비견(比肩)</td><td>음양까지 같은 기운. 자립심과 주관, 든든한 동료.</td>
+          <td class="n">비견(比肩)<span class="msr-tencnt"></span></td><td>음양까지 같은 기운. 자립심과 주관, 든든한 동료.</td>
         </tr>
-        <tr><td class="n">겁재(劫財)</td><td>음양이 다른 기운. 승부욕과 과감한 실행력, 재물 경쟁.</td></tr>
-        <tr>
+        <tr data-ten="겁재"><td class="n">겁재(劫財)<span class="msr-tencnt"></span></td><td>음양이 다른 기운. 승부욕과 과감한 실행력, 재물 경쟁.</td></tr>
+        <tr data-ten="식신">
           <td class="g" rowspan="2"><b>식상(食傷)</b><span>내가 만들어내는 오행<br>표현·재능·의식주</span></td>
-          <td class="n">식신(食神)</td><td>꾸준한 재능과 표현, 여유와 먹을 복.</td>
+          <td class="n">식신(食神)<span class="msr-tencnt"></span></td><td>꾸준한 재능과 표현, 여유와 먹을 복.</td>
         </tr>
-        <tr><td class="n">상관(傷官)</td><td>틀을 깨는 언변과 창의력, 예리한 비판 정신.</td></tr>
-        <tr>
+        <tr data-ten="상관"><td class="n">상관(傷官)<span class="msr-tencnt"></span></td><td>틀을 깨는 언변과 창의력, 예리한 비판 정신.</td></tr>
+        <tr data-ten="편재">
           <td class="g" rowspan="2"><b>재성(財星)</b><span>내가 다스리는 오행<br>재물·현실 감각</span></td>
-          <td class="n">편재(偏財)</td><td>유동적인 큰돈, 사업 수완과 넓은 대인관계.</td>
+          <td class="n">편재(偏財)<span class="msr-tencnt"></span></td><td>유동적인 큰돈, 사업 수완과 넓은 대인관계.</td>
         </tr>
-        <tr><td class="n">정재(正財)</td><td>안정적인 재물, 성실함과 계획적인 관리.</td></tr>
-        <tr>
+        <tr data-ten="정재"><td class="n">정재(正財)<span class="msr-tencnt"></span></td><td>안정적인 재물, 성실함과 계획적인 관리.</td></tr>
+        <tr data-ten="편관">
           <td class="g" rowspan="2"><b>관성(官星)</b><span>나를 다스리는 오행<br>명예·직장·책임</span></td>
-          <td class="n">편관(偏官)</td><td>도전과 시련을 이겨내는 카리스마와 결단력.</td>
+          <td class="n">편관(偏官)<span class="msr-tencnt"></span></td><td>도전과 시련을 이겨내는 카리스마와 결단력.</td>
         </tr>
-        <tr><td class="n">정관(正官)</td><td>원칙과 신용, 안정된 조직·직장운.</td></tr>
-        <tr>
+        <tr data-ten="정관"><td class="n">정관(正官)<span class="msr-tencnt"></span></td><td>원칙과 신용, 안정된 조직·직장운.</td></tr>
+        <tr data-ten="편인">
           <td class="g" rowspan="2"><b>인성(印星)</b><span>나를 도와주는 오행<br>학문·수용·보호</span></td>
-          <td class="n">편인(偏印)</td><td>직관과 독특한 재능, 한 분야에 대한 깊은 몰입.</td>
+          <td class="n">편인(偏印)<span class="msr-tencnt"></span></td><td>직관과 독특한 재능, 한 분야에 대한 깊은 몰입.</td>
         </tr>
-        <tr><td class="n">정인(正印)</td><td>학문과 문서운, 어머니 같은 수용력.</td></tr>
+        <tr data-ten="정인"><td class="n">정인(正印)<span class="msr-tencnt"></span></td><td>학문과 문서운, 어머니 같은 수용력.</td></tr>
       </table>
       <p class="msr-note">
         · 년주는 입춘, 월주는 절기(절입) 시각 기준으로 계산합니다. 절입 시각 전후 수 분 이내 출생이라면 전문 만세력과 대조해 주세요.<br>
@@ -677,6 +681,16 @@ function render(r, opts){
 
   /* --- 오행 상생·상극 원형도 --- */
   $('msr-cycle').innerHTML = buildCycleSVG(cnt, total);
+
+  /* --- 십성 용어 풀이 표: 내 사주에 있는 십성 강조 + 개수 --- */
+  var glossRows = document.querySelectorAll('#msr-app table.msr-gloss tr[data-ten]');
+  for (var gr = 0; gr < glossRows.length; gr++){
+    var row = glossRows[gr];
+    var n = tenCnt[row.getAttribute('data-ten')] || 0;
+    row.className = n > 0 ? 'msr-hl' : '';
+    var chip = row.querySelector('.msr-tencnt');
+    if (chip) chip.textContent = n + '개';
+  }
 }
 
 /* 오행 5개를 원형(오각형)으로 배치: 바깥 실선 직선 화살표 = 생, 안쪽 점선 화살표 = 극 */
