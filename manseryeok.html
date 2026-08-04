@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>만세력 사주팔자 계산기</title>
+</head>
+<body>
+<!-- ============================================================
+  만세력 사주팔자 계산기 (단일 파일, 외부 라이브러리 없음)
+
+  · 블로그(티스토리/네이버 등) HTML 편집 모드에 붙여넣을 때는
+    아래 <style> 부터 마지막 </script> 까지를 그대로 복사하면 됩니다.
+  · 절기(절입) 시각은 태양의 시황경을 직접 계산하여 구합니다.
+    (오차 수 분 이내 — 절입 시각 전후 수 분 이내 출생은 전문 만세력 대조 권장)
+  · 년주: 입춘 기준 / 월주: 절기 기준 / 일주: 율리우스일 / 시주: 시두법
+============================================================ -->
+<style>
+#msr-app{max-width:720px;margin:0 auto;padding:16px;font-family:'Apple SD Gothic Neo','Noto Sans KR','Malgun Gothic',sans-serif;color:#26303a;line-height:1.55;box-sizing:border-box}
+#msr-app *,#msr-app *::before,#msr-app *::after{box-sizing:border-box}
+#msr-app .msr-card{background:#fff;border:1px solid #e3e8ee;border-radius:14px;padding:20px;margin-bottom:16px;box-shadow:0 1px 4px rgba(20,40,70,.06)}
+#msr-app h2{margin:0 0 4px;font-size:1.35rem}
+#msr-app .msr-sub{margin:0 0 16px;font-size:.85rem;color:#7b8794}
+#msr-app .msr-row{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px}
+#msr-app .msr-field{display:flex;flex-direction:column;gap:4px}
+#msr-app .msr-field label{font-size:.78rem;font-weight:600;color:#55606c}
+#msr-app input[type=number],#msr-app select{padding:8px 10px;border:1px solid #cfd7e0;border-radius:8px;font-size:.95rem;background:#fff;color:#26303a}
+#msr-app input[type=number]{width:86px}
+#msr-app .msr-opts{display:flex;flex-wrap:wrap;gap:14px;margin:4px 0 14px;font-size:.85rem;color:#444}
+#msr-app .msr-opts label{display:flex;align-items:center;gap:5px;cursor:pointer}
+#msr-app button.msr-btn{width:100%;padding:12px;border:none;border-radius:10px;background:#31456b;color:#fff;font-size:1.02rem;font-weight:700;cursor:pointer}
+#msr-app button.msr-btn:hover{background:#3d5583}
+#msr-app .msr-err{color:#c62828;font-size:.88rem;margin-top:10px;display:none}
+#msr-app .msr-summary{font-size:.95rem;margin-bottom:14px}
+#msr-app .msr-summary b{color:#31456b}
+#msr-app table.msr-pillars{width:100%;border-collapse:collapse;table-layout:fixed;text-align:center}
+#msr-app table.msr-pillars th{font-size:.82rem;padding:6px 2px;color:#55606c;border-bottom:1px solid #e3e8ee;font-weight:600}
+#msr-app table.msr-pillars td{padding:5px 3px;vertical-align:middle}
+#msr-app .msr-ten{font-size:.74rem;color:#7b8794}
+#msr-app .msr-char{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;width:56px;height:56px;border-radius:10px;color:#fff;font-weight:700;line-height:1.1}
+#msr-app .msr-char .h{font-size:1.35rem}
+#msr-app .msr-char .k{font-size:.68rem;opacity:.9;font-weight:500}
+#msr-app .msr-jj{font-size:.72rem;color:#7b8794;letter-spacing:1px}
+#msr-app .msr-e0{background:#2e7d32}
+#msr-app .msr-e1{background:#c62828}
+#msr-app .msr-e2{background:#b8860b}
+#msr-app .msr-e3{background:#78848f}
+#msr-app .msr-e4{background:#1a2f6e}
+#msr-app .msr-none{color:#aab3bd;font-size:.9rem}
+#msr-app h3{font-size:1rem;margin:0 0 10px;color:#31456b}
+#msr-app .msr-elem-bars{display:flex;flex-direction:column;gap:6px}
+#msr-app .msr-elem-row{display:flex;align-items:center;gap:8px;font-size:.85rem}
+#msr-app .msr-elem-name{width:52px;font-weight:600}
+#msr-app .msr-elem-track{flex:1;background:#eef1f5;border-radius:6px;height:16px;overflow:hidden}
+#msr-app .msr-elem-fill{height:100%;border-radius:6px;min-width:2px}
+#msr-app .msr-elem-cnt{width:28px;text-align:right;color:#55606c}
+#msr-app .msr-daeun-wrap{overflow-x:auto}
+#msr-app table.msr-daeun{border-collapse:collapse;text-align:center;min-width:100%}
+#msr-app table.msr-daeun th,#msr-app table.msr-daeun td{padding:6px 8px;font-size:.85rem;border-bottom:1px solid #eef1f5;white-space:nowrap}
+#msr-app table.msr-daeun th{color:#55606c;font-weight:600}
+#msr-app .msr-daeun-gz{font-weight:700;font-size:1rem}
+#msr-app .msr-terms{font-size:.85rem;color:#55606c}
+#msr-app .msr-terms b{color:#26303a}
+#msr-app .msr-note{font-size:.76rem;color:#8a94a0;margin-top:6px;line-height:1.6}
+#msr-app #msr-result{display:none}
+@media (max-width:480px){
+  #msr-app{padding:8px}
+  #msr-app .msr-card{padding:14px}
+  #msr-app .msr-char{width:46px;height:46px}
+  #msr-app .msr-char .h{font-size:1.1rem}
+  #msr-app input[type=number]{width:72px}
+}
+</style>
+
+<div id="msr-app">
+  <div class="msr-card">
+    <h2>만세력 사주팔자 계산기</h2>
+    <p class="msr-sub">양력 생년월일시를 입력하면 사주팔자(년주·월주·일주·시주)와 대운을 계산합니다.</p>
+
+    <div class="msr-row">
+      <div class="msr-field"><label>년 (양력)</label><input type="number" id="msr-y" min="1900" max="2100" placeholder="1990"></div>
+      <div class="msr-field"><label>월</label><input type="number" id="msr-mo" min="1" max="12" placeholder="5"></div>
+      <div class="msr-field"><label>일</label><input type="number" id="msr-d" min="1" max="31" placeholder="15"></div>
+      <div class="msr-field"><label>시</label><input type="number" id="msr-h" min="0" max="23" placeholder="14"></div>
+      <div class="msr-field"><label>분</label><input type="number" id="msr-mi" min="0" max="59" placeholder="30"></div>
+      <div class="msr-field"><label>성별 (대운 계산용)</label>
+        <select id="msr-sex"><option value="M">남자</option><option value="F">여자</option></select>
+      </div>
+    </div>
+
+    <div class="msr-opts">
+      <label><input type="checkbox" id="msr-unknown"> 태어난 시간을 몰라요</label>
+      <label><input type="checkbox" id="msr-solar" checked> 진태양시 보정 (−30분)</label>
+      <label>자시 처리
+        <select id="msr-jasi"><option value="ya">야자시 (기본)</option><option value="jeong">정자시</option></select>
+      </label>
+    </div>
+
+    <button class="msr-btn" id="msr-go">사주팔자 계산하기</button>
+    <div class="msr-err" id="msr-err"></div>
+  </div>
+
+  <div id="msr-result">
+    <div class="msr-card">
+      <div class="msr-summary" id="msr-summary"></div>
+      <table class="msr-pillars">
+        <thead><tr><th>시주 (時柱)</th><th>일주 (日柱)</th><th>월주 (月柱)</th><th>년주 (年柱)</th></tr></thead>
+        <tbody id="msr-pillar-body"></tbody>
+      </table>
+      <p class="msr-note" id="msr-adjnote"></p>
+    </div>
+
+    <div class="msr-card">
+      <h3>오행 분포</h3>
+      <div class="msr-elem-bars" id="msr-elems"></div>
+    </div>
+
+    <div class="msr-card">
+      <h3 id="msr-daeun-title">대운</h3>
+      <div class="msr-daeun-wrap"><table class="msr-daeun" id="msr-daeun"></table></div>
+    </div>
+
+    <div class="msr-card">
+      <h3>절기 정보</h3>
+      <div class="msr-terms" id="msr-terms"></div>
+      <p class="msr-note">
+        · 절기(절입) 시각은 태양 황경을 계산해 구한 값으로, 한국천문연구원 발표값과 수 분 이내의 차이가 있을 수 있습니다.
+        절입 시각 전후 수 분 이내 출생이라면 전문 만세력과 대조해 주세요.<br>
+        · 1908~1911년, 1954~1961년의 표준시(UTC+8:30)와 서머타임(1948~1960, 1987~1988) 시행 기간은 자동 보정됩니다.<br>
+        · 진태양시 보정은 서울 경도 기준 −30분을 일괄 적용하며, 균시차는 반영하지 않습니다.<br>
+        · 본 계산기는 참고용이며, 결과 해석은 명리 이론과 유파에 따라 다를 수 있습니다.
+      </p>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+/* ===================== 기초 데이터 ===================== */
+var STEMS_H = ['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
+var STEMS_K = ['갑','을','병','정','무','기','경','신','임','계'];
+var BRANCH_H = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+var BRANCH_K = ['자','축','인','묘','진','사','오','미','신','유','술','해'];
+var ANIMALS  = ['쥐','소','호랑이','토끼','용','뱀','말','양','원숭이','닭','개','돼지'];
+/* 오행: 0목 1화 2토 3금 4수 */
+var STEM_ELEM   = [0,0,1,1,2,2,3,3,4,4];
+var BRANCH_ELEM = [4,2,0,0,2,1,1,2,3,3,2,4];
+var ELEM_K = ['목(木)','화(火)','토(土)','금(金)','수(水)'];
+var ELEM_COLOR = ['#2e7d32','#c62828','#b8860b','#78848f','#1a2f6e'];
+/* 지장간 (여기 → 중기 → 정기 순, 마지막이 정기) — 천간 인덱스 */
+var HIDDEN = [
+  [8,9],      /* 子: 壬癸 */
+  [9,7,5],    /* 丑: 癸辛己 */
+  [4,2,0],    /* 寅: 戊丙甲 */
+  [0,1],      /* 卯: 甲乙 */
+  [1,9,4],    /* 辰: 乙癸戊 */
+  [4,6,2],    /* 巳: 戊庚丙 */
+  [2,5,3],    /* 午: 丙己丁 */
+  [3,1,5],    /* 未: 丁乙己 */
+  [4,8,6],    /* 申: 戊壬庚 */
+  [6,7],      /* 酉: 庚辛 */
+  [7,3,4],    /* 戌: 辛丁戊 */
+  [4,0,8]     /* 亥: 戊甲壬 */
+];
+/* 월지(寅월=0) 순서의 절기(節) 이름 */
+var TERM_NAMES = ['입춘','경칩','청명','입하','망종','소서','입추','백로','한로','입동','대설','소한'];
+
+/* ===================== 달력/천문 계산 ===================== */
+/* 그레고리력 → 율리우스일 (hourFrac: 0~24 실수 시각, UT 기준) */
+function jdFromUT(y, mo, d, hourFrac){
+  var a = Math.floor((14 - mo) / 12);
+  var yy = y + 4800 - a;
+  var mm = mo + 12 * a - 3;
+  var jdn = d + Math.floor((153 * mm + 2) / 5) + 365 * yy
+          + Math.floor(yy / 4) - Math.floor(yy / 100) + Math.floor(yy / 400) - 32045;
+  return jdn + (hourFrac - 12) / 24;
+}
+/* 율리우스일 → 그레고리력 날짜/시각 */
+function jdToDate(jd){
+  var z = Math.floor(jd + 0.5), f = jd + 0.5 - z;
+  var alpha = Math.floor((z - 1867216.25) / 36524.25);
+  var a = z + 1 + alpha - Math.floor(alpha / 4);
+  var b = a + 1524;
+  var c = Math.floor((b - 122.1) / 365.25);
+  var dd = Math.floor(365.25 * c);
+  var e = Math.floor((b - dd) / 30.6001);
+  var day = b - dd - Math.floor(30.6001 * e);
+  var mo = e < 14 ? e - 1 : e - 13;
+  var y = mo > 2 ? c - 4716 : c - 4715;
+  var totalMin = Math.round(f * 1440);
+  if (totalMin >= 1440){ totalMin -= 1440; return nextDay(y, mo, day, totalMin); }
+  return { y: y, mo: mo, d: day, h: Math.floor(totalMin / 60), mi: totalMin % 60 };
+}
+function nextDay(y, mo, d, totalMin){
+  var jd2 = jdFromUT(y, mo, d, 12) + 1;
+  var nd = jdToDate(jd2);
+  nd.h = Math.floor(totalMin / 60); nd.mi = totalMin % 60;
+  return nd;
+}
+/* 태양 시황경 (도, 0~360) — Meeus 근사식 */
+function sunLongitude(jd){
+  var T = (jd - 2451545.0) / 36525;
+  var L0 = 280.46646 + 36000.76983 * T + 0.0003032 * T * T;
+  var M = (357.52911 + 35999.05029 * T - 0.0001537 * T * T) * Math.PI / 180;
+  var C = (1.914602 - 0.004817 * T - 0.000014 * T * T) * Math.sin(M)
+        + (0.019993 - 0.000101 * T) * Math.sin(2 * M)
+        + 0.000289 * Math.sin(3 * M);
+  var omega = (125.04 - 1934.136 * T) * Math.PI / 180;
+  var lon = L0 + C - 0.00569 - 0.00478 * Math.sin(omega);
+  return ((lon % 360) + 360) % 360;
+}
+function angleDiff(a, b){ /* a-b 를 (-180,180] 로 정규화 */
+  var d = (a - b) % 360;
+  if (d > 180) d -= 360;
+  if (d <= -180) d += 360;
+  return d;
+}
+/* 태양 황경이 targetLon(도)이 되는 시각(JD, UT) — 뉴턴 반복 */
+function findTermJD(targetLon, jdGuess){
+  var jd = jdGuess;
+  for (var i = 0; i < 25; i++){
+    var d = angleDiff(targetLon, sunLongitude(jd));
+    jd += d / 0.9856473;
+    if (Math.abs(d) < 1e-7) break;
+  }
+  return jd;
+}
+
+/* ===================== 한국 표준시 보정 ===================== */
+/* 서머타임 시행 기간 [시작, 끝) — 벽시계 기준 [y,mo,d,h] */
+var DST_PERIODS = [
+  [[1948,6,1,0],[1948,9,13,0]], [[1949,4,3,0],[1949,9,11,0]],
+  [[1950,4,1,0],[1950,9,10,0]], [[1951,5,6,0],[1951,9,9,0]],
+  [[1955,5,5,0],[1955,9,9,0]],  [[1956,5,20,0],[1956,9,30,0]],
+  [[1957,5,5,0],[1957,9,22,0]], [[1958,5,4,0],[1958,9,21,0]],
+  [[1959,5,3,0],[1959,9,20,0]], [[1960,5,1,0],[1960,9,18,0]],
+  [[1987,5,10,2],[1987,10,11,3]], [[1988,5,8,2],[1988,10,9,3]]
+];
+function timeKey(y, mo, d, h, mi){ return (((y * 100 + mo) * 100 + d) * 100 + h) * 100 + mi; }
+/* 벽시계 시각 → UTC와의 차(시간). 반환 {off, notes[]} */
+function kstOffset(y, mo, d, h, mi){
+  var key = timeKey(y, mo, d, h, mi);
+  var off = 9, notes = [];
+  if (key < timeKey(1912,1,1,0,0)){ off = 8.5; notes.push('표준시 UTC+8:30 (1912년 이전)'); }
+  else if (key >= timeKey(1954,3,21,0,0) && key < timeKey(1961,8,10,0,0)){ off = 8.5; notes.push('표준시 UTC+8:30 (1954~1961)'); }
+  for (var i = 0; i < DST_PERIODS.length; i++){
+    var s = DST_PERIODS[i][0], e = DST_PERIODS[i][1];
+    if (key >= timeKey(s[0],s[1],s[2],s[3],0) && key < timeKey(e[0],e[1],e[2],e[3],0)){
+      off += 1; notes.push('서머타임 +1시간 (' + s[0] + '년)');
+      break;
+    }
+  }
+  return { off: off, notes: notes };
+}
+
+/* ===================== 간지 유틸 ===================== */
+function ganzhiIdx(stem, branch){ return ((6 * stem - 5 * branch) % 60 + 60) % 60; }
+function gzHan(i){ return STEMS_H[i % 10] + BRANCH_H[i % 12]; }
+function gzKor(i){ return STEMS_K[i % 10] + BRANCH_K[i % 12]; }
+/* 십성 (일간 기준) */
+function tenGod(dayStem, otherStem){
+  var de = STEM_ELEM[dayStem], oe = STEM_ELEM[otherStem];
+  var samePol = (dayStem % 2) === (otherStem % 2);
+  var rel;
+  if (oe === de) rel = 0;
+  else if (oe === (de + 1) % 5) rel = 1;
+  else if (oe === (de + 2) % 5) rel = 2;
+  else if (oe === (de + 3) % 5) rel = 3;
+  else rel = 4;
+  var names = [['비견','겁재'],['식신','상관'],['편재','정재'],['편관','정관'],['편인','정인']];
+  return names[rel][samePol ? 0 : 1];
+}
+
+/* ===================== 사주 계산 본체 ===================== */
+/*
+ opts: { unknownTime, trueSolar, jasi: 'ya'|'jeong', sex: 'M'|'F' }
+ 반환: 사주 전체 정보 객체
+*/
+function calcSaju(y, mo, d, h, mi, opts){
+  if (opts.unknownTime){ h = 12; mi = 0; } /* 시간 모름 → 정오로 두고 시주만 생략 */
+
+  var tz = kstOffset(y, mo, d, h, mi);
+  /* 실제 출생 순간 (UT) — 절기 비교용 */
+  var jdUT = jdFromUT(y, mo, d, h + mi / 60 - tz.off);
+  /* 사주용 보정 시각: 표준시(UTC+9)로 환산 후 진태양시 −30분 */
+  var solarAdj = (opts.trueSolar && !opts.unknownTime) ? 30 : 0;
+  var jdLocal = jdUT + 9 / 24 - solarAdj / 1440;
+  var adj = jdToDate(jdLocal);
+
+  /* --- 년주 (입춘 기준) --- */
+  var ipchunJD = findTermJD(315, jdFromUT(y, 2, 4, 0));
+  var sajuYear = (jdUT >= ipchunJD) ? y : y - 1;
+  var yearStem = ((sajuYear - 4) % 10 + 10) % 10;
+  var yearBranch = ((sajuYear - 4) % 12 + 12) % 12;
+
+  /* --- 월주 (절기 기준: 태양 황경으로 직접 판정) --- */
+  var lon = sunLongitude(jdUT);
+  var monthIdx0 = Math.floor((((lon - 315) % 360) + 360) % 360 / 30); /* 0=寅월 */
+  var monthBranch = (monthIdx0 + 2) % 12;
+  var monthStem = ((yearStem % 5) * 2 + 2 + monthIdx0) % 10;
+
+  /* --- 일주 --- */
+  var t = adj.h * 60 + adj.mi;              /* 보정 시각의 자정 기준 분 */
+  var localJDN = Math.floor(jdLocal + 0.5); /* 보정 시각 기준 그 날짜의 JDN */
+  var dayJDN = localJDN;
+  var hourDayJDN = localJDN;                /* 시두법에 쓸 일간의 날짜 */
+  if (t >= 23 * 60){
+    if (opts.jasi === 'jeong'){ dayJDN += 1; hourDayJDN += 1; } /* 정자시: 23시부터 다음 날 */
+    else { hourDayJDN += 1; }                                   /* 야자시: 일주 유지, 시간만 다음 날 일간 */
+  }
+  var dayIdx = ((dayJDN + 49) % 60 + 60) % 60;
+  var dayStem = dayIdx % 10, dayBranch = dayIdx % 12;
+
+  /* --- 시주 --- */
+  var hourPillar = null;
+  if (!opts.unknownTime){
+    var hourBranch = Math.floor(((t + 60) % 1440) / 120);
+    var hStemBase = (((hourDayJDN + 49) % 60 + 60) % 60) % 10;
+    var hourStem = ((hStemBase % 5) * 2 + hourBranch) % 10;
+    hourPillar = { stem: hourStem, branch: hourBranch };
+  }
+
+  /* --- 대운 --- */
+  var yangYear = (yearStem % 2 === 0);
+  var forward = (yangYear && opts.sex === 'M') || (!yangYear && opts.sex === 'F');
+  var termJD, gapDays;
+  if (forward){
+    var nextLon = (315 + 30 * (monthIdx0 + 1)) % 360;
+    termJD = findTermJD(nextLon, jdUT + (((nextLon - lon) % 360) + 360) % 360 / 0.9856);
+    gapDays = termJD - jdUT;
+  } else {
+    var prevLon = (315 + 30 * monthIdx0) % 360;
+    termJD = findTermJD(prevLon, jdUT - (((lon - prevLon) % 360) + 360) % 360 / 0.9856);
+    gapDays = jdUT - termJD;
+  }
+  var daeunSu = Math.round(gapDays / 3);
+  if (daeunSu < 1) daeunSu = 1;
+  if (daeunSu > 10) daeunSu = 10;
+  var monthGZ = ganzhiIdx(monthStem, monthBranch);
+  var daeun = [];
+  for (var k = 1; k <= 10; k++){
+    var idx = ((monthGZ + (forward ? k : -k)) % 60 + 60) % 60;
+    daeun.push({ age: daeunSu + 10 * (k - 1), idx: idx });
+  }
+
+  /* --- 절기 정보 (표시용) --- */
+  var curLon = (315 + 30 * monthIdx0) % 360;
+  var nxtLon2 = (315 + 30 * (monthIdx0 + 1)) % 360;
+  var curTermJD = findTermJD(curLon, jdUT - (((lon - curLon) % 360) + 360) % 360 / 0.9856);
+  var nxtTermJD = findTermJD(nxtLon2, jdUT + (((nxtLon2 - lon) % 360) + 360) % 360 / 0.9856);
+
+  return {
+    input: { y: y, mo: mo, d: d, h: h, mi: mi },
+    adj: adj, tzNotes: tz.notes, solarAdj: solarAdj,
+    year:  { stem: yearStem,  branch: yearBranch },
+    month: { stem: monthStem, branch: monthBranch },
+    day:   { stem: dayStem,   branch: dayBranch },
+    hour:  hourPillar,
+    monthIdx0: monthIdx0,
+    daeun: { su: daeunSu, forward: forward, list: daeun, gapDays: gapDays },
+    terms: {
+      cur: { name: TERM_NAMES[monthIdx0], jd: curTermJD },
+      next: { name: TERM_NAMES[(monthIdx0 + 1) % 12], jd: nxtTermJD }
+    }
+  };
+}
+
+/* node 등 비브라우저 환경에서 테스트할 수 있게 노출 */
+if (typeof module !== 'undefined' && module.exports){
+  module.exports = { calcSaju: calcSaju, sunLongitude: sunLongitude, findTermJD: findTermJD,
+    jdFromUT: jdFromUT, jdToDate: jdToDate, gzHan: gzHan, gzKor: gzKor, tenGod: tenGod, kstOffset: kstOffset };
+}
+if (typeof document === 'undefined') return;
+
+/* ===================== UI ===================== */
+function $(id){ return document.getElementById(id); }
+function pad2(n){ return (n < 10 ? '0' : '') + n; }
+function fmtJDasKST(jd){
+  var dt = jdToDate(jd + 9 / 24);
+  return dt.y + '-' + pad2(dt.mo) + '-' + pad2(dt.d) + ' ' + pad2(dt.h) + ':' + pad2(dt.mi);
+}
+function charBox(stem, branch){
+  function tile(han, kor, elem){
+    return '<div class="msr-char msr-e' + elem + '"><span class="h">' + han + '</span><span class="k">' + kor + '</span></div>';
+  }
+  return { stemTile: tile(STEMS_H[stem], STEMS_K[stem], STEM_ELEM[stem]),
+           branchTile: tile(BRANCH_H[branch], BRANCH_K[branch], BRANCH_ELEM[branch]) };
+}
+
+$('msr-unknown').addEventListener('change', function(){
+  $('msr-h').disabled = this.checked;
+  $('msr-mi').disabled = this.checked;
+});
+
+$('msr-go').addEventListener('click', function(){
+  var err = $('msr-err');
+  err.style.display = 'none';
+  var y = parseInt($('msr-y').value, 10), mo = parseInt($('msr-mo').value, 10), d = parseInt($('msr-d').value, 10);
+  var unknown = $('msr-unknown').checked;
+  var h = unknown ? 12 : parseInt($('msr-h').value, 10);
+  var mi = unknown ? 0 : parseInt($('msr-mi').value, 10);
+  if (unknown){ h = 12; mi = 0; }
+
+  function fail(msg){ err.textContent = msg; err.style.display = 'block'; $('msr-result').style.display = 'none'; }
+  if (!y || !mo || !d || isNaN(h) || isNaN(mi)) return fail('생년월일과 시각을 모두 입력해 주세요. (시간을 모르면 "태어난 시간을 몰라요"를 체크)');
+  if (y < 1900 || y > 2100) return fail('연도는 1900년부터 2100년까지 지원합니다.');
+  if (mo < 1 || mo > 12) return fail('월은 1~12 사이로 입력해 주세요.');
+  var mdays = [31, (y % 4 === 0 && y % 100 !== 0) || y % 400 === 0 ? 29 : 28, 31,30,31,30,31,31,30,31,30,31][mo - 1];
+  if (d < 1 || d > mdays) return fail(y + '년 ' + mo + '월은 ' + mdays + '일까지 있습니다.');
+  if (h < 0 || h > 23 || mi < 0 || mi > 59) return fail('시각은 0~23시, 0~59분 사이로 입력해 주세요.');
+
+  var opts = { unknownTime: unknown, trueSolar: $('msr-solar').checked, jasi: $('msr-jasi').value, sex: $('msr-sex').value };
+  var r = calcSaju(y, mo, d, h, mi, opts);
+  render(r, opts);
+  $('msr-result').style.display = 'block';
+  $('msr-result').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+});
+
+function render(r, opts){
+  var sexKo = opts.sex === 'M' ? '남자' : '여자';
+  var yGz = ganzhiIdx(r.year.stem, r.year.branch);
+  var timeStr = opts.unknownTime ? '(시간 모름)' : pad2(r.input.h) + ':' + pad2(r.input.mi);
+  $('msr-summary').innerHTML =
+    '<b>' + r.input.y + '년 ' + r.input.mo + '월 ' + r.input.d + '일 ' + timeStr + '</b> (양력) 출생 ' + sexKo + ' · ' +
+    '<b>' + gzKor(yGz) + '(' + gzHan(yGz) + ')년 ' + ANIMALS[r.year.branch] + '띠</b>';
+
+  /* 사주 테이블: 시-일-월-년 순 */
+  var pillars = [r.hour, r.day, r.month, r.year];
+  var ds = r.day.stem;
+  var rowTenS = '<tr>', rowStem = '<tr>', rowBranch = '<tr>', rowTenB = '<tr>', rowJJ = '<tr>';
+  for (var i = 0; i < 4; i++){
+    var p = pillars[i];
+    if (!p){
+      rowTenS += '<td class="msr-none">–</td>'; rowStem += '<td class="msr-none">시간<br>모름</td>';
+      rowBranch += '<td class="msr-none">–</td>'; rowTenB += '<td class="msr-none">–</td>'; rowJJ += '<td class="msr-none">–</td>';
+      continue;
+    }
+    var box = charBox(p.stem, p.branch);
+    var jj = HIDDEN[p.branch];
+    var jjStr = '', jjArr = [];
+    for (var j = 0; j < jj.length; j++) jjArr.push(STEMS_H[jj[j]]);
+    jjStr = jjArr.join('·');
+    var mainHidden = jj[jj.length - 1];
+    rowTenS += '<td class="msr-ten">' + (i === 1 ? '일간(본원)' : tenGod(ds, p.stem)) + '</td>';
+    rowStem += '<td>' + box.stemTile + '</td>';
+    rowBranch += '<td>' + box.branchTile + '</td>';
+    rowTenB += '<td class="msr-ten">' + tenGod(ds, mainHidden) + '</td>';
+    rowJJ += '<td class="msr-jj">' + jjStr + '</td>';
+  }
+  $('msr-pillar-body').innerHTML =
+    rowTenS + '</tr>' + rowStem + '</tr>' + rowBranch + '</tr>' + rowTenB + '</tr>' + rowJJ + '</tr>' +
+    '<tr><td colspan="4" class="msr-ten" style="padding-top:8px">위→아래: 십성 / 천간 / 지지 / 십성(지장간 정기 기준) / 지장간</td></tr>';
+
+  /* 보정 내역 */
+  var notes = [];
+  if (r.tzNotes.length) notes = notes.concat(r.tzNotes);
+  if (r.solarAdj) notes.push('진태양시 보정 −30분');
+  if (opts.jasi === 'ya') notes.push('야자시 적용 (23시~24시 출생: 일주 유지, 시주는 다음 날 일간 기준)');
+  else notes.push('정자시 적용 (23시부터 다음 날로 계산)');
+  var adjStr = r.adj.y + '-' + pad2(r.adj.mo) + '-' + pad2(r.adj.d) + ' ' + pad2(r.adj.h) + ':' + pad2(r.adj.mi);
+  $('msr-adjnote').innerHTML = '적용 보정: ' + notes.join(' · ') +
+    (opts.unknownTime ? '' : '<br>보정 후 계산 기준 시각: ' + adjStr);
+
+  /* 오행 분포 */
+  var cnt = [0, 0, 0, 0, 0];
+  for (var i2 = 0; i2 < 4; i2++){
+    var p2 = pillars[i2];
+    if (!p2) continue;
+    cnt[STEM_ELEM[p2.stem]]++; cnt[BRANCH_ELEM[p2.branch]]++;
+  }
+  var total = opts.unknownTime ? 6 : 8;
+  var bars = '';
+  for (var e = 0; e < 5; e++){
+    var w = total ? Math.round(cnt[e] / total * 100) : 0;
+    bars += '<div class="msr-elem-row"><span class="msr-elem-name">' + ELEM_K[e] + '</span>' +
+      '<div class="msr-elem-track"><div class="msr-elem-fill" style="width:' + w + '%;background:' + ELEM_COLOR[e] + '"></div></div>' +
+      '<span class="msr-elem-cnt">' + cnt[e] + '개</span></div>';
+  }
+  $('msr-elems').innerHTML = bars;
+
+  /* 대운 */
+  $('msr-daeun-title').textContent = '대운 (대운수 ' + r.daeun.su + ' · ' + (r.daeun.forward ? '순행' : '역행') + ')';
+  var ages = '<tr><th>나이</th>', gzs = '<tr><th>간지</th>', tens = '<tr><th>십성</th>';
+  for (var k = 0; k < r.daeun.list.length; k++){
+    var du = r.daeun.list[k];
+    ages += '<th>' + du.age + '세</th>';
+    gzs += '<td class="msr-daeun-gz">' + gzHan(du.idx) + '<br><span style="font-weight:400;font-size:.78rem">' + gzKor(du.idx) + '</span></td>';
+    tens += '<td class="msr-ten">' + tenGod(ds, du.idx % 10) + '</td>';
+  }
+  $('msr-daeun').innerHTML = ages + '</tr>' + gzs + '</tr>' + tens + '</tr>';
+
+  /* 절기 */
+  $('msr-terms').innerHTML =
+    '이번 달 절입: <b>' + r.terms.cur.name + '</b> ' + fmtJDasKST(r.terms.cur.jd) + ' (KST)<br>' +
+    '다음 절입: <b>' + r.terms.next.name + '</b> ' + fmtJDasKST(r.terms.next.jd) + ' (KST)<br>' +
+    '대운 기준 절입까지 ' + r.daeun.gapDays.toFixed(1) + '일 (' + (r.daeun.forward ? '다음 절입까지 순행' : '지난 절입부터 역행') + ')';
+}
+})();
+</script>
+</body>
+</html>
