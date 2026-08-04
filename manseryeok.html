@@ -73,8 +73,13 @@
 #msr-app .msr-cycle-legend{font-size:.9rem;color:#55606c;margin-top:4px}
 #msr-app .msr-cycle-legend .lg{display:inline-block;width:26px;height:0;border-top:3px solid #55606c;vertical-align:middle;margin:0 4px}
 #msr-app .msr-cycle-legend .lr{display:inline-block;width:26px;height:0;border-top:3px dashed #c62828;vertical-align:middle;margin:0 4px}
-#msr-app .msr-gloss{margin:0;font-size:.92rem;line-height:1.65;color:#444;display:grid;grid-template-columns:1fr 1fr;gap:6px 18px}
+#msr-app .msr-gloss-intro{font-size:.92rem;line-height:1.65;color:#444;margin:0 0 14px}
+#msr-app .msr-gloss-intro b{color:#31456b}
+#msr-app .msr-gloss{margin:0;font-size:.92rem;line-height:1.65;color:#444;display:grid;grid-template-columns:1fr 1fr;gap:14px 22px}
 #msr-app .msr-gloss div b{color:#31456b}
+#msr-app .msr-gloss ul{margin:4px 0 0;padding:0;list-style:none}
+#msr-app .msr-gloss li{padding-left:16px;position:relative}
+#msr-app .msr-gloss li::before{content:'–';position:absolute;left:2px;color:#8a94a0}
 @media (max-width:560px){ #msr-app .msr-gloss{grid-template-columns:1fr} }
 #msr-app .msr-note{font-size:.82rem;color:#8a94a0;margin-top:6px;line-height:1.6}
 #msr-app .msr-help{font-size:.87rem;color:#8a94a0;line-height:1.6;margin:0 0 14px;padding:10px 12px;background:#f6f8fa;border-radius:8px}
@@ -163,24 +168,44 @@
       <p class="msr-cycle-legend">
         <span class="lg"></span>생(生) : 도와주고 낳아주는 관계 &nbsp;&nbsp;
         <span class="lr"></span>극(剋) : 억누르고 통제하는 관계<br>
-        색이 칠해진 오행이 내 사주에 있는 기운이며, %는 내 기질에서 차지하는 비율입니다.
+        색이 칠해진 오행이 내 사주에 있는 기운이며, 각 원의 숫자는 여덟 글자 중 개수와 내 기질에서 차지하는 비율(%)입니다.
       </p>
     </div>
 
     <div class="msr-card">
       <h3>십성(十星) 용어 풀이</h3>
+      <p class="msr-gloss-intro"><b>일간(본원)</b> — 사주의 주인공인 나 자신입니다. 나머지 글자들은 일간과의 관계에 따라 아래 다섯 그룹(열 가지 십성)으로 나뉩니다.</p>
       <div class="msr-gloss">
-        <div><b>일간(본원)</b> — 사주의 주인공인 나 자신. 다른 모든 글자는 일간과의 관계로 십성이 정해집니다.</div>
-        <div><b>비견(比肩)</b> — 나와 같은 기운. 형제·동료·자립심. 내 주관을 밀고 나가는 힘입니다.</div>
-        <div><b>겁재(劫財)</b> — 나와 같은 오행의 경쟁자. 승부욕과 과감한 실행력, 재물 경쟁의 기운입니다.</div>
-        <div><b>식신(食神)</b> — 내가 만들어내는 기운. 의식주·재능·꾸준한 표현, 먹을 복을 뜻합니다.</div>
-        <div><b>상관(傷官)</b> — 틀을 깨는 표현력. 언변·창의력·예술성, 비판 정신을 뜻합니다.</div>
-        <div><b>편재(偏財)</b> — 활동적인 재물. 사업 수완, 넓은 대인관계, 유동적인 큰돈을 뜻합니다.</div>
-        <div><b>정재(正財)</b> — 안정적인 재물. 성실·근면, 계획적인 저축과 꼼꼼함을 뜻합니다.</div>
-        <div><b>편관(偏官)</b> — 나를 단련시키는 힘. 도전·카리스마·결단력, 책임을 지는 자리를 뜻합니다.</div>
-        <div><b>정관(正官)</b> — 명예와 원칙. 조직·직장운, 반듯함과 신용을 뜻합니다.</div>
-        <div><b>편인(偏印)</b> — 직관과 특별한 재능. 한 분야에 깊이 몰입하는 학문·예술의 기운입니다.</div>
-        <div><b>정인(正印)</b> — 학문과 문서운. 어머니의 사랑 같은 수용력과 안정을 뜻합니다.</div>
+        <div><b>비겁(比劫)</b> — 나와 같은 오행. 자아·형제·동료·경쟁의 기운입니다.
+          <ul>
+            <li><b>비견(比肩)</b>: 음양까지 같은 기운. 자립심과 주관, 든든한 동료.</li>
+            <li><b>겁재(劫財)</b>: 음양이 다른 기운. 승부욕과 과감한 실행력, 재물 경쟁.</li>
+          </ul>
+        </div>
+        <div><b>식상(食傷)</b> — 내가 만들어내는 오행. 표현·재능·의식주의 기운입니다.
+          <ul>
+            <li><b>식신(食神)</b>: 꾸준한 재능과 표현, 여유와 먹을 복.</li>
+            <li><b>상관(傷官)</b>: 틀을 깨는 언변과 창의력, 예리한 비판 정신.</li>
+          </ul>
+        </div>
+        <div><b>재성(財星)</b> — 내가 다스리는 오행. 재물과 현실 감각의 기운입니다.
+          <ul>
+            <li><b>편재(偏財)</b>: 유동적인 큰돈, 사업 수완과 넓은 대인관계.</li>
+            <li><b>정재(正財)</b>: 안정적인 재물, 성실함과 계획적인 관리.</li>
+          </ul>
+        </div>
+        <div><b>관성(官星)</b> — 나를 다스리는 오행. 명예·직장·책임의 기운입니다.
+          <ul>
+            <li><b>편관(偏官)</b>: 도전과 시련을 이겨내는 카리스마와 결단력.</li>
+            <li><b>정관(正官)</b>: 원칙과 신용, 안정된 조직·직장운.</li>
+          </ul>
+        </div>
+        <div><b>인성(印星)</b> — 나를 도와주는 오행. 학문·수용·보호의 기운입니다.
+          <ul>
+            <li><b>편인(偏印)</b>: 직관과 독특한 재능, 한 분야에 대한 깊은 몰입.</li>
+            <li><b>정인(正印)</b>: 학문과 문서운, 어머니 같은 수용력.</li>
+          </ul>
+        </div>
       </div>
       <p class="msr-note">
         · 년주는 입춘, 월주는 절기(절입) 시각 기준으로 계산합니다. 절입 시각 전후 수 분 이내 출생이라면 전문 만세력과 대조해 주세요.<br>
@@ -691,10 +716,10 @@ function buildCycleSVG(cnt, total){
     var pct = Math.round(cnt[i] / total * 100);
     svg += '<circle cx="' + pos[i][0].toFixed(1) + '" cy="' + pos[i][1].toFixed(1) + '" r="' + r + '" fill="' + fill + '"' +
       (has ? '' : ' stroke="#c9d1da" stroke-width="1.5" stroke-dasharray="4 3"') + '/>';
-    svg += '<text x="' + pos[i][0].toFixed(1) + '" y="' + (pos[i][1] - 5).toFixed(1) +
+    svg += '<text x="' + pos[i][0].toFixed(1) + '" y="' + (pos[i][1] - 7).toFixed(1) +
       '" text-anchor="middle" font-size="19" font-weight="700" fill="' + tcol + '">' + ELEM_K[i] + '</text>';
-    svg += '<text x="' + pos[i][0].toFixed(1) + '" y="' + (pos[i][1] + 20).toFixed(1) +
-      '" text-anchor="middle" font-size="16" fill="' + tcol + '">' + pct + '%</text>';
+    svg += '<text x="' + pos[i][0].toFixed(1) + '" y="' + (pos[i][1] + 18).toFixed(1) +
+      '" text-anchor="middle" font-size="14.5" fill="' + tcol + '">' + cnt[i] + '개 · ' + pct + '%</text>';
   }
   svg += '</svg>';
   return svg;
