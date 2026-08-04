@@ -26,8 +26,15 @@
 #msr-app .msr-field label{font-size:.78rem;font-weight:600;color:#55606c}
 #msr-app input[type=number],#msr-app select{padding:8px 10px;border:1px solid #cfd7e0;border-radius:8px;font-size:.95rem;background:#fff;color:#26303a}
 #msr-app input[type=number]{width:86px}
-#msr-app .msr-opts{display:flex;flex-wrap:wrap;gap:14px;margin:4px 0 14px;font-size:.85rem;color:#444}
+#msr-app .msr-opts{display:flex;flex-wrap:wrap;gap:14px;margin:4px 0 14px;font-size:.85rem;color:#444;align-items:center}
 #msr-app .msr-opts label{display:flex;align-items:center;gap:5px;cursor:pointer}
+#msr-app .msr-ac{position:relative;display:inline-block}
+#msr-app .msr-ac input{width:130px;padding:6px 10px;border:1px solid #cfd7e0;border-radius:8px;font-size:.9rem}
+#msr-app .msr-ac-list{position:absolute;top:100%;left:0;right:0;z-index:50;background:#fff;border:1px solid #cfd7e0;border-radius:8px;margin-top:2px;max-height:220px;overflow-y:auto;box-shadow:0 4px 12px rgba(20,40,70,.15);display:none}
+#msr-app .msr-ac-item{padding:7px 12px;cursor:pointer;font-size:.88rem}
+#msr-app .msr-ac-item:hover{background:#eef2f8}
+#msr-app .msr-ac-item small{color:#8a94a0;margin-left:6px}
+#msr-app .msr-region-info{font-size:.76rem;color:#8a94a0}
 #msr-app button.msr-btn{width:100%;padding:12px;border:none;border-radius:10px;background:#31456b;color:#fff;font-size:1.02rem;font-weight:700;cursor:pointer}
 #msr-app button.msr-btn:hover{background:#3d5583}
 #msr-app .msr-err{color:#c62828;font-size:.88rem;margin-top:10px;display:none}
@@ -48,12 +55,25 @@
 #msr-app .msr-e4{background:#1a2f6e}
 #msr-app .msr-none{color:#aab3bd;font-size:.9rem}
 #msr-app h3{font-size:1rem;margin:0 0 10px;color:#31456b}
-#msr-app .msr-elem-bars{display:flex;flex-direction:column;gap:6px}
-#msr-app .msr-elem-row{display:flex;align-items:center;gap:8px;font-size:.85rem}
-#msr-app .msr-elem-name{width:52px;font-weight:600}
-#msr-app .msr-elem-track{flex:1;background:#eef1f5;border-radius:6px;height:16px;overflow:hidden}
-#msr-app .msr-elem-fill{height:100%;border-radius:6px;min-width:2px}
-#msr-app .msr-elem-cnt{width:28px;text-align:right;color:#55606c}
+#msr-app .msr-pillar-desc{margin:14px 0 0;padding:0;list-style:none;font-size:.8rem;color:#55606c;line-height:1.7}
+#msr-app .msr-pillar-desc b{color:#31456b}
+#msr-app table.msr-anal{width:100%;border-collapse:collapse;font-size:.85rem;text-align:center;margin-bottom:6px}
+#msr-app table.msr-anal th{padding:6px 4px;color:#55606c;font-weight:600;border-bottom:1px solid #e3e8ee;font-size:.8rem}
+#msr-app table.msr-anal td{padding:6px 4px;border-bottom:1px solid #f1f4f8}
+#msr-app .msr-anal-sum{font-size:.86rem;margin:10px 0 2px}
+#msr-app .msr-anal-sum b{color:#31456b}
+#msr-app .msr-badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:.75rem;font-weight:600;background:#eef1f5;color:#55606c}
+#msr-app .msr-badge.b0{background:#fdecea;color:#c62828}
+#msr-app .msr-badge.b1{background:#fff4e0;color:#b26a00}
+#msr-app .msr-badge.b3{background:#e3edfb;color:#1565c0}
+#msr-app .msr-cycle-wrap{text-align:center}
+#msr-app .msr-cycle-wrap svg{max-width:340px;width:100%;height:auto}
+#msr-app .msr-cycle-legend{font-size:.8rem;color:#55606c;margin-top:4px}
+#msr-app .msr-cycle-legend .lg{display:inline-block;width:26px;height:0;border-top:3px solid #55606c;vertical-align:middle;margin:0 4px}
+#msr-app .msr-cycle-legend .lr{display:inline-block;width:26px;height:0;border-top:3px dashed #c62828;vertical-align:middle;margin:0 4px}
+#msr-app .msr-gloss{margin:0;font-size:.82rem;line-height:1.65;color:#444;display:grid;grid-template-columns:1fr 1fr;gap:6px 18px}
+#msr-app .msr-gloss div b{color:#31456b}
+@media (max-width:560px){ #msr-app .msr-gloss{grid-template-columns:1fr} }
 #msr-app .msr-note{font-size:.76rem;color:#8a94a0;margin-top:6px;line-height:1.6}
 #msr-app .msr-help{font-size:.78rem;color:#8a94a0;line-height:1.6;margin:0 0 14px;padding:10px 12px;background:#f6f8fa;border-radius:8px}
 #msr-app .msr-help b{color:#55606c}
@@ -82,10 +102,17 @@
 
     <div class="msr-opts">
       <label><input type="checkbox" id="msr-unknown"> 태어난 시간을 몰라요</label>
-      <label><input type="checkbox" id="msr-solar" checked> 진태양시 보정 (−30분)</label>
       <label>자시 처리
         <select id="msr-jasi"><option value="ya">야자시 (기본)</option><option value="jeong">정자시</option></select>
       </label>
+    </div>
+    <div class="msr-opts">
+      <label><input type="checkbox" id="msr-solar" checked> 출생지 기준 시간 보정 (진태양시)</label>
+      <span class="msr-ac">
+        <input type="text" id="msr-region" value="서울" autocomplete="off" placeholder="출생 지역 검색">
+        <div class="msr-ac-list" id="msr-region-list"></div>
+      </span>
+      <span class="msr-region-info" id="msr-region-info"></span>
     </div>
 
     <p class="msr-help">
@@ -93,7 +120,10 @@
       밤 11시~12시(자정 전)에 태어난 경우 날짜를 어떻게 볼지 유파마다 해석이 갈립니다.<br>
       · <b>야자시</b>: 날짜(일주)는 태어난 그날 그대로 두고, 시주만 다음 날 기준의 자시로 계산합니다. (일반 만세력 기본)<br>
       · <b>정자시</b>: 밤 11시부터 아예 다음 날로 넘어간 것으로 보고, 일주와 시주 모두 다음 날 기준으로 계산합니다.<br>
-      밤 11시~12시 사이 출생이 아니라면 어느 쪽을 선택해도 결과는 같습니다.
+      밤 11시~12시 사이 출생이 아니라면 어느 쪽을 선택해도 결과는 같습니다.<br><br>
+      <b>출생지 기준 시간 보정이란?</b> 한국 표준시는 동경 135°(일본 아카시) 기준이라,
+      실제 해가 뜨고 지는 시각과 시계가 어긋납니다. 태어난 지역을 선택하면 그 지역의 경도에 맞춰
+      시간을 보정합니다(경도 1°당 4분, 서울 −32분·부산 −24분 등). 시주가 경계 시각에 걸친 경우 결과가 달라질 수 있습니다.
     </p>
 
     <button class="msr-btn" id="msr-go">사주팔자 계산하기</button>
@@ -107,16 +137,53 @@
         <thead><tr><th>시주 (時柱)</th><th>일주 (日柱)</th><th>월주 (月柱)</th><th>년주 (年柱)</th></tr></thead>
         <tbody id="msr-pillar-body"></tbody>
       </table>
+      <ul class="msr-pillar-desc">
+        <li><b>년주(年柱)</b> — 조상과 집안의 뿌리, 태어난 환경. 어린 시절(초년운)을 나타냅니다.</li>
+        <li><b>월주(月柱)</b> — 부모·형제와 성장 배경, 사회 활동의 무대. 청년기 운을 나타냅니다.</li>
+        <li><b>일주(日柱)</b> — 천간(일간)은 나 자신, 지지(일지)는 배우자 자리. 중년기 운을 나타냅니다.</li>
+        <li><b>시주(時柱)</b> — 자녀와 아랫사람, 인생의 결실. 노년기(말년운)를 나타냅니다.</li>
+      </ul>
       <p class="msr-note" id="msr-adjnote"></p>
     </div>
 
     <div class="msr-card">
-      <h3>오행 분포</h3>
-      <div class="msr-elem-bars" id="msr-elems"></div>
+      <h3>오행 · 십성 분석</h3>
+      <div id="msr-anal"></div>
+      <p class="msr-note">
+        · 오행은 여덟 글자(천간 4 + 지지 4)를, 십성은 일간(나)을 제외한 천간과 각 지지의 정기(대표 지장간)를 기준으로 센 값입니다.
+        단순 개수 기준의 참고 지표이며, 지장간 전체·계절의 힘 등을 따지는 정밀 분석과는 다를 수 있습니다.
+      </p>
+    </div>
+
+    <div class="msr-card">
+      <h3>오행 상생 · 상극 관계</h3>
+      <div class="msr-cycle-wrap" id="msr-cycle"></div>
+      <p class="msr-cycle-legend">
+        <span class="lg"></span>생(生) : 도와주고 낳아주는 관계 &nbsp;&nbsp;
+        <span class="lr"></span>극(剋) : 억누르고 통제하는 관계<br>
+        색이 칠해진 오행이 내 사주에 있는 기운이며, %는 내 기질에서 차지하는 비율입니다.
+      </p>
+    </div>
+
+    <div class="msr-card">
+      <h3>십성(十星) 용어 풀이</h3>
+      <div class="msr-gloss">
+        <div><b>일간(본원)</b> — 사주의 주인공인 나 자신. 다른 모든 글자는 일간과의 관계로 십성이 정해집니다.</div>
+        <div><b>비견(比肩)</b> — 나와 같은 기운. 형제·동료·자립심. 내 주관을 밀고 나가는 힘입니다.</div>
+        <div><b>겁재(劫財)</b> — 나와 같은 오행의 경쟁자. 승부욕과 과감한 실행력, 재물 경쟁의 기운입니다.</div>
+        <div><b>식신(食神)</b> — 내가 만들어내는 기운. 의식주·재능·꾸준한 표현, 먹을 복을 뜻합니다.</div>
+        <div><b>상관(傷官)</b> — 틀을 깨는 표현력. 언변·창의력·예술성, 비판 정신을 뜻합니다.</div>
+        <div><b>편재(偏財)</b> — 활동적인 재물. 사업 수완, 넓은 대인관계, 유동적인 큰돈을 뜻합니다.</div>
+        <div><b>정재(正財)</b> — 안정적인 재물. 성실·근면, 계획적인 저축과 꼼꼼함을 뜻합니다.</div>
+        <div><b>편관(偏官)</b> — 나를 단련시키는 힘. 도전·카리스마·결단력, 책임을 지는 자리를 뜻합니다.</div>
+        <div><b>정관(正官)</b> — 명예와 원칙. 조직·직장운, 반듯함과 신용을 뜻합니다.</div>
+        <div><b>편인(偏印)</b> — 직관과 특별한 재능. 한 분야에 깊이 몰입하는 학문·예술의 기운입니다.</div>
+        <div><b>정인(正印)</b> — 학문과 문서운. 어머니의 사랑 같은 수용력과 안정을 뜻합니다.</div>
+      </div>
       <p class="msr-note">
         · 년주는 입춘, 월주는 절기(절입) 시각 기준으로 계산합니다. 절입 시각 전후 수 분 이내 출생이라면 전문 만세력과 대조해 주세요.<br>
         · 1908~1911년, 1954~1961년의 표준시(UTC+8:30)와 서머타임(1948~1960, 1987~1988) 시행 기간은 자동 보정됩니다.<br>
-        · 진태양시 보정은 서울 경도 기준 −30분을 일괄 적용합니다.<br>
+        · 진태양시 보정은 선택한 출생 지역의 경도를 기준으로 적용합니다(경도 1°당 4분, 균시차 미반영). 해외 출생은 지원하지 않습니다.<br>
         · 본 계산기는 참고용이며, 결과 해석은 명리 이론과 유파에 따라 다를 수 있습니다.
       </p>
     </div>
@@ -241,6 +308,71 @@ function kstOffset(y, mo, d, h, mi){
   return { off: off, notes: notes };
 }
 
+/* ===================== 출생 지역 (경도) ===================== */
+/* [이름, 동경(도), 분류] — 진태양시 보정 = (경도 − 135°) × 4분 */
+var REGIONS = [
+  ['서울',126.978,'특별시'],['부산',129.075,'광역시'],['대구',128.601,'광역시'],['인천',126.705,'광역시'],
+  ['광주',126.853,'광역시'],['대전',127.385,'광역시'],['울산',129.311,'광역시'],['세종',127.289,'특별자치시'],
+  ['수원',127.029,'경기'],['성남',127.126,'경기'],['고양',126.832,'경기'],['용인',127.178,'경기'],
+  ['부천',126.766,'경기'],['안산',126.831,'경기'],['안양',126.953,'경기'],['남양주',127.216,'경기'],
+  ['화성',126.831,'경기'],['평택',127.113,'경기'],['의정부',127.034,'경기'],['파주',126.780,'경기'],
+  ['시흥',126.803,'경기'],['김포',126.716,'경기'],['광명',126.864,'경기'],['군포',126.935,'경기'],
+  ['이천',127.435,'경기'],['오산',127.077,'경기'],['하남',127.215,'경기'],['양주',127.046,'경기'],
+  ['구리',127.129,'경기'],['안성',127.280,'경기'],['포천',127.200,'경기'],['의왕',126.968,'경기'],
+  ['여주',127.637,'경기'],['동두천',127.061,'경기'],['과천',126.988,'경기'],['가평',127.510,'경기'],
+  ['양평',127.487,'경기'],['연천',127.075,'경기'],
+  ['춘천',127.730,'강원'],['원주',127.920,'강원'],['강릉',128.876,'강원'],['동해',129.114,'강원'],
+  ['태백',128.986,'강원'],['속초',128.592,'강원'],['삼척',129.165,'강원'],['홍천',127.889,'강원'],
+  ['횡성',127.985,'강원'],['영월',128.462,'강원'],['평창',128.390,'강원'],['정선',128.661,'강원'],
+  ['철원',127.313,'강원'],['화천',127.708,'강원'],['양구',127.990,'강원'],['인제',128.170,'강원'],
+  ['고성(강원)',128.468,'강원'],['양양',128.619,'강원'],
+  ['청주',127.489,'충북'],['충주',127.926,'충북'],['제천',128.191,'충북'],['보은',127.729,'충북'],
+  ['옥천',127.571,'충북'],['영동',127.783,'충북'],['증평',127.581,'충북'],['진천',127.435,'충북'],
+  ['괴산',127.787,'충북'],['음성',127.690,'충북'],['단양',128.365,'충북'],
+  ['천안',127.114,'충남'],['공주',127.119,'충남'],['보령',126.613,'충남'],['아산',127.002,'충남'],
+  ['서산',126.450,'충남'],['논산',127.099,'충남'],['계룡',127.249,'충남'],['당진',126.646,'충남'],
+  ['금산',127.488,'충남'],['부여',126.910,'충남'],['서천',126.692,'충남'],['청양',126.802,'충남'],
+  ['홍성',126.661,'충남'],['예산',126.845,'충남'],['태안',126.298,'충남'],
+  ['전주',127.148,'전북'],['군산',126.737,'전북'],['익산',126.958,'전북'],['정읍',126.856,'전북'],
+  ['남원',127.390,'전북'],['김제',126.880,'전북'],['완주',127.162,'전북'],['진안',127.425,'전북'],
+  ['무주',127.661,'전북'],['장수',127.521,'전북'],['임실',127.289,'전북'],['순창',127.137,'전북'],
+  ['고창',126.702,'전북'],['부안',126.733,'전북'],
+  ['목포',126.392,'전남'],['여수',127.662,'전남'],['순천',127.487,'전남'],['나주',126.711,'전남'],
+  ['광양',127.696,'전남'],['담양',126.988,'전남'],['곡성',127.292,'전남'],['구례',127.463,'전남'],
+  ['고흥',127.285,'전남'],['보성',127.080,'전남'],['화순',126.986,'전남'],['장흥',126.907,'전남'],
+  ['강진',126.767,'전남'],['해남',126.599,'전남'],['영암',126.697,'전남'],['무안',126.482,'전남'],
+  ['함평',126.517,'전남'],['영광',126.512,'전남'],['장성',126.785,'전남'],['완도',126.755,'전남'],
+  ['진도',126.263,'전남'],['신안',126.110,'전남'],
+  ['포항',129.343,'경북'],['경주',129.225,'경북'],['김천',128.114,'경북'],['안동',128.730,'경북'],
+  ['구미',128.344,'경북'],['영주',128.624,'경북'],['영천',128.939,'경북'],['상주',128.159,'경북'],
+  ['문경',128.187,'경북'],['경산',128.741,'경북'],['의성',128.697,'경북'],['청송',129.057,'경북'],
+  ['영양',129.112,'경북'],['영덕',129.366,'경북'],['청도',128.734,'경북'],['고령',128.263,'경북'],
+  ['성주',128.283,'경북'],['칠곡',128.402,'경북'],['예천',128.453,'경북'],['봉화',128.733,'경북'],
+  ['울진',129.400,'경북'],['울릉',130.906,'경북'],
+  ['창원',128.681,'경남'],['진주',128.108,'경남'],['통영',128.433,'경남'],['사천',128.064,'경남'],
+  ['김해',128.889,'경남'],['밀양',128.747,'경남'],['거제',128.621,'경남'],['양산',129.037,'경남'],
+  ['의령',128.262,'경남'],['함안',128.406,'경남'],['창녕',128.492,'경남'],['고성(경남)',128.322,'경남'],
+  ['남해',127.893,'경남'],['하동',127.751,'경남'],['산청',127.873,'경남'],['함양',127.725,'경남'],
+  ['거창',127.909,'경남'],['합천',128.166,'경남'],
+  ['제주',126.531,'제주'],['서귀포',126.560,'제주'],
+  ['평양',125.754,'북한'],['개성',126.554,'북한'],['남포',125.407,'북한'],['해주',125.714,'북한'],
+  ['사리원',125.760,'북한'],['원산',127.447,'북한'],['함흥',127.536,'북한'],['청진',129.775,'북한'],
+  ['신의주',124.398,'북한'],['혜산',128.177,'북한'],['강계',126.585,'북한'],['나선',130.300,'북한']
+];
+/* 지역 이름 → 항목. 정확히 일치 우선, 아니면 시작 일치가 1개일 때만 인정 */
+function findRegion(name){
+  name = (name || '').trim();
+  if (!name) return null;
+  var starts = [];
+  for (var i = 0; i < REGIONS.length; i++){
+    if (REGIONS[i][0] === name) return REGIONS[i];
+    if (REGIONS[i][0].indexOf(name) === 0) starts.push(REGIONS[i]);
+  }
+  return starts.length === 1 ? starts[0] : null;
+}
+/* 경도 → 진태양시 보정(분, 부호 포함. 한국은 음수=시계를 뒤로) */
+function solarAdjOf(lon){ return Math.round((lon - 135) * 4); }
+
 /* ===================== 간지 유틸 ===================== */
 function ganzhiIdx(stem, branch){ return ((6 * stem - 5 * branch) % 60 + 60) % 60; }
 function gzHan(i){ return STEMS_H[i % 10] + BRANCH_H[i % 12]; }
@@ -261,7 +393,7 @@ function tenGod(dayStem, otherStem){
 
 /* ===================== 사주 계산 본체 ===================== */
 /*
- opts: { unknownTime, trueSolar, jasi: 'ya'|'jeong', sex: 'M'|'F' }
+ opts: { unknownTime, trueSolar, solarAdjMin(부호 포함 분), jasi: 'ya'|'jeong' }
  반환: 사주 전체 정보 객체
 */
 function calcSaju(y, mo, d, h, mi, opts){
@@ -270,9 +402,9 @@ function calcSaju(y, mo, d, h, mi, opts){
   var tz = kstOffset(y, mo, d, h, mi);
   /* 실제 출생 순간 (UT) — 절기 비교용 */
   var jdUT = jdFromUT(y, mo, d, h + mi / 60 - tz.off);
-  /* 사주용 보정 시각: 표준시(UTC+9)로 환산 후 진태양시 −30분 */
-  var solarAdj = (opts.trueSolar && !opts.unknownTime) ? 30 : 0;
-  var jdLocal = jdUT + 9 / 24 - solarAdj / 1440;
+  /* 사주용 보정 시각: 표준시(UTC+9)로 환산 후 출생지 경도 기준 진태양시 보정 */
+  var solarAdj = (opts.trueSolar && !opts.unknownTime) ? (opts.solarAdjMin || 0) : 0;
+  var jdLocal = jdUT + 9 / 24 + solarAdj / 1440;
   var adj = jdToDate(jdLocal);
 
   /* --- 년주 (입춘 기준) --- */
@@ -322,7 +454,8 @@ function calcSaju(y, mo, d, h, mi, opts){
 /* node 등 비브라우저 환경에서 테스트할 수 있게 노출 */
 if (typeof module !== 'undefined' && module.exports){
   module.exports = { calcSaju: calcSaju, sunLongitude: sunLongitude, findTermJD: findTermJD,
-    jdFromUT: jdFromUT, jdToDate: jdToDate, gzHan: gzHan, gzKor: gzKor, tenGod: tenGod, kstOffset: kstOffset };
+    jdFromUT: jdFromUT, jdToDate: jdToDate, gzHan: gzHan, gzKor: gzKor, tenGod: tenGod, kstOffset: kstOffset,
+    findRegion: findRegion, solarAdjOf: solarAdjOf, REGIONS: REGIONS };
 }
 if (typeof document === 'undefined') return;
 
@@ -342,6 +475,44 @@ $('msr-unknown').addEventListener('change', function(){
   $('msr-mi').disabled = this.checked;
 });
 
+/* --- 출생 지역 검색(자동완성) --- */
+var regionInput = $('msr-region'), regionList = $('msr-region-list'), regionInfo = $('msr-region-info');
+function fmtAdj(min){ return (min > 0 ? '+' : '−') + Math.abs(min) + '분'; }
+function renderRegionInfo(){
+  var reg = findRegion(regionInput.value);
+  if (reg) regionInfo.textContent = reg[2] + ' ' + reg[0] + ' · 동경 ' + reg[1].toFixed(2) + '° · 보정 ' + fmtAdj(solarAdjOf(reg[1]));
+  else regionInfo.textContent = '목록에서 지역을 선택해 주세요';
+}
+function showRegionList(){
+  var q = regionInput.value.trim(), items = [];
+  for (var i = 0; i < REGIONS.length && items.length < 8; i++){
+    if (!q || REGIONS[i][0].indexOf(q) !== -1) items.push(REGIONS[i]);
+  }
+  if (!items.length){ regionList.style.display = 'none'; return; }
+  var html = '';
+  for (var j = 0; j < items.length; j++){
+    html += '<div class="msr-ac-item" data-name="' + items[j][0] + '">' + items[j][0] + '<small>' + items[j][2] + ' · ' + fmtAdj(solarAdjOf(items[j][1])) + '</small></div>';
+  }
+  regionList.innerHTML = html; regionList.style.display = 'block';
+}
+regionInput.addEventListener('input', function(){ showRegionList(); renderRegionInfo(); });
+regionInput.addEventListener('focus', showRegionList);
+regionInput.addEventListener('blur', function(){ setTimeout(function(){ regionList.style.display = 'none'; }, 150); });
+regionList.addEventListener('mousedown', function(ev){
+  var t = ev.target;
+  while (t && t !== regionList && !(t.className && String(t.className).indexOf('msr-ac-item') !== -1)) t = t.parentNode;
+  if (!t || t === regionList) return;
+  regionInput.value = t.getAttribute('data-name');
+  regionList.style.display = 'none';
+  renderRegionInfo();
+  ev.preventDefault();
+});
+$('msr-solar').addEventListener('change', function(){
+  regionInput.disabled = !this.checked;
+  regionInfo.style.display = this.checked ? '' : 'none';
+});
+renderRegionInfo();
+
 $('msr-go').addEventListener('click', function(){
   var err = $('msr-err');
   err.style.display = 'none';
@@ -360,6 +531,12 @@ $('msr-go').addEventListener('click', function(){
   if (h < 0 || h > 23 || mi < 0 || mi > 59) return fail('시각은 0~23시, 0~59분 사이로 입력해 주세요.');
 
   var opts = { unknownTime: unknown, trueSolar: $('msr-solar').checked, jasi: $('msr-jasi').value };
+  if (opts.trueSolar){
+    var reg = findRegion($('msr-region').value);
+    if (!reg) return fail('출생 지역을 목록에서 선택해 주세요. (예: 서울, 부산, 강릉 …) 목록에 없는 지역은 가까운 시·군을 선택하면 됩니다.');
+    opts.solarAdjMin = solarAdjOf(reg[1]);
+    opts.regionName = reg[0];
+  }
   var r = calcSaju(y, mo, d, h, mi, opts);
   render(r, opts);
   $('msr-result').style.display = 'block';
@@ -403,14 +580,14 @@ function render(r, opts){
   /* 보정 내역 */
   var notes = [];
   if (r.tzNotes.length) notes = notes.concat(r.tzNotes);
-  if (r.solarAdj) notes.push('진태양시 보정 −30분');
+  if (r.solarAdj) notes.push('출생지(' + opts.regionName + ') 진태양시 보정 ' + (r.solarAdj > 0 ? '+' : '−') + Math.abs(r.solarAdj) + '분');
   if (opts.jasi === 'ya') notes.push('야자시 적용 (23시~24시 출생: 일주 유지, 시주는 다음 날 일간 기준)');
   else notes.push('정자시 적용 (23시부터 다음 날로 계산)');
   var adjStr = r.adj.y + '-' + pad2(r.adj.mo) + '-' + pad2(r.adj.d) + ' ' + pad2(r.adj.h) + ':' + pad2(r.adj.mi);
   $('msr-adjnote').innerHTML = '적용 보정: ' + notes.join(' · ') +
     (opts.unknownTime ? '' : '<br>보정 후 계산 기준 시각: ' + adjStr);
 
-  /* 오행 분포 */
+  /* --- 오행 개수 (여덟 글자 기준) --- */
   var cnt = [0, 0, 0, 0, 0];
   for (var i2 = 0; i2 < 4; i2++){
     var p2 = pillars[i2];
@@ -418,14 +595,108 @@ function render(r, opts){
     cnt[STEM_ELEM[p2.stem]]++; cnt[BRANCH_ELEM[p2.branch]]++;
   }
   var total = opts.unknownTime ? 6 : 8;
-  var bars = '';
-  for (var e = 0; e < 5; e++){
-    var w = total ? Math.round(cnt[e] / total * 100) : 0;
-    bars += '<div class="msr-elem-row"><span class="msr-elem-name">' + ELEM_K[e] + '</span>' +
-      '<div class="msr-elem-track"><div class="msr-elem-fill" style="width:' + w + '%;background:' + ELEM_COLOR[e] + '"></div></div>' +
-      '<span class="msr-elem-cnt">' + cnt[e] + '개</span></div>';
+
+  /* --- 십성 개수 (일간 제외 천간 + 각 지지 정기) --- */
+  var TEN_ORDER = ['비견','겁재','식신','상관','편재','정재','편관','정관','편인','정인'];
+  var tenCnt = {};
+  for (var q = 0; q < TEN_ORDER.length; q++) tenCnt[TEN_ORDER[q]] = 0;
+  for (var i3 = 0; i3 < 4; i3++){
+    var p3 = pillars[i3];
+    if (!p3) continue;
+    if (i3 !== 1) tenCnt[tenGod(ds, p3.stem)]++;
+    var hid = HIDDEN[p3.branch];
+    tenCnt[tenGod(ds, hid[hid.length - 1])]++;
   }
-  $('msr-elems').innerHTML = bars;
+
+  function badge(n){
+    var L = n === 0 ? 0 : n === 1 ? 1 : n === 2 ? 2 : 3;
+    return '<span class="msr-badge b' + L + '">' + ['없음','적음','보통','많음'][L] + '</span>';
+  }
+
+  var html = '<table class="msr-anal"><tr><th>오행</th><th>개수</th><th>비율</th><th>판정</th></tr>';
+  for (var e = 0; e < 5; e++){
+    html += '<tr><td style="font-weight:700;color:' + ELEM_COLOR[e] + '">' + ELEM_K[e] + '</td>' +
+      '<td>' + cnt[e] + '개</td><td>' + Math.round(cnt[e] / total * 100) + '%</td><td>' + badge(cnt[e]) + '</td></tr>';
+  }
+  html += '</table>';
+
+  var GROUPS = [['비겁',['비견','겁재']],['식상',['식신','상관']],['재성',['편재','정재']],['관성',['편관','정관']],['인성',['편인','정인']]];
+  html += '<table class="msr-anal" style="margin-top:14px"><tr><th>십성</th><th>구성</th><th>합계</th><th>판정</th></tr>';
+  var groupSums = [], maxGV = -1;
+  for (var g = 0; g < 5; g++){
+    var a = GROUPS[g][1], n1 = tenCnt[a[0]], n2 = tenCnt[a[1]], s = n1 + n2;
+    groupSums.push(s);
+    if (s > maxGV) maxGV = s;
+    html += '<tr><td style="font-weight:700">' + GROUPS[g][0] + '</td>' +
+      '<td>' + a[0] + ' ' + n1 + '개 · ' + a[1] + ' ' + n2 + '개</td><td>' + s + '개</td><td>' + badge(s) + '</td></tr>';
+  }
+  html += '</table>';
+  var maxGList = [];
+  for (g = 0; g < 5; g++) if (groupSums[g] === maxGV && maxGV > 0) maxGList.push(GROUPS[g][0]);
+
+  var maxV = Math.max.apply(null, cnt), maxList = [], zeroList = [];
+  for (e = 0; e < 5; e++){
+    if (cnt[e] === maxV && maxV > 0) maxList.push(ELEM_K[e]);
+    if (cnt[e] === 0) zeroList.push(ELEM_K[e]);
+  }
+  html += '<p class="msr-anal-sum">가장 많은 오행: <b>' + maxList.join(', ') + ' (' + maxV + '개)</b>' +
+    (zeroList.length ? ' · 없는 오행: <b>' + zeroList.join(', ') + '</b>' : ' · 다섯 오행을 모두 갖추었습니다') +
+    ' · 가장 강한 십성: <b>' + maxGList.join(', ') + ' (' + maxGV + '개)</b></p>';
+  $('msr-anal').innerHTML = html;
+
+  /* --- 오행 상생·상극 원형도 --- */
+  $('msr-cycle').innerHTML = buildCycleSVG(cnt, total);
+}
+
+/* 오행 5개를 원형(오각형)으로 배치: 바깥 실선 화살표 = 생, 안쪽 점선 화살표 = 극 */
+function buildCycleSVG(cnt, total){
+  var W = 340, H = 336, cx = 170, cy = 171, R = 112, r = 38;
+  var pos = [];
+  for (var i = 0; i < 5; i++){
+    var a = (-90 + i * 72) * Math.PI / 180;
+    pos.push([cx + R * Math.cos(a), cy + R * Math.sin(a)]);
+  }
+  function edgePoint(from, to, offset){
+    var dx = to[0] - from[0], dy = to[1] - from[1], L = Math.sqrt(dx * dx + dy * dy);
+    return [from[0] + dx / L * offset, from[1] + dy / L * offset];
+  }
+  var svg = '<svg viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="오행 상생 상극 관계도">';
+  svg += '<defs>' +
+    '<marker id="msrAG" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#55606c"/></marker>' +
+    '<marker id="msrAR" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#c62828"/></marker>' +
+    '</defs>';
+  /* 생(生): 목→화→토→금→수→목, 바깥쪽으로 살짝 휘는 곡선 */
+  for (i = 0; i < 5; i++){
+    var A = pos[i], B = pos[(i + 1) % 5];
+    var s = edgePoint(A, B, r + 4), t = edgePoint(B, A, r + 12);
+    var mx = (s[0] + t[0]) / 2, my = (s[1] + t[1]) / 2;
+    var ox = mx - cx, oy = my - cy, ol = Math.sqrt(ox * ox + oy * oy);
+    var qx = mx + ox / ol * 32, qy = my + oy / ol * 32;
+    svg += '<path d="M' + s[0].toFixed(1) + ',' + s[1].toFixed(1) + ' Q' + qx.toFixed(1) + ',' + qy.toFixed(1) +
+      ' ' + t[0].toFixed(1) + ',' + t[1].toFixed(1) + '" fill="none" stroke="#55606c" stroke-width="2.2" marker-end="url(#msrAG)"/>';
+  }
+  /* 극(剋): 목→토, 화→금, 토→수, 금→목, 수→화 (안쪽 별 모양 점선) */
+  for (i = 0; i < 5; i++){
+    var A2 = pos[i], B2 = pos[(i + 2) % 5];
+    var s2 = edgePoint(A2, B2, r + 4), t2 = edgePoint(B2, A2, r + 12);
+    svg += '<line x1="' + s2[0].toFixed(1) + '" y1="' + s2[1].toFixed(1) + '" x2="' + t2[0].toFixed(1) + '" y2="' + t2[1].toFixed(1) +
+      '" stroke="#c62828" stroke-width="2" stroke-dasharray="6 5" opacity="0.8" marker-end="url(#msrAR)"/>';
+  }
+  /* 오행 노드: 사주에 있으면 오행 색, 없으면 회색 점선 */
+  for (i = 0; i < 5; i++){
+    var has = cnt[i] > 0;
+    var fill = has ? ELEM_COLOR[i] : '#eef1f5';
+    var tcol = has ? '#fff' : '#9aa4ae';
+    var pct = Math.round(cnt[i] / total * 100);
+    svg += '<circle cx="' + pos[i][0].toFixed(1) + '" cy="' + pos[i][1].toFixed(1) + '" r="' + r + '" fill="' + fill + '"' +
+      (has ? '' : ' stroke="#c9d1da" stroke-width="1.5" stroke-dasharray="4 3"') + '/>';
+    svg += '<text x="' + pos[i][0].toFixed(1) + '" y="' + (pos[i][1] - 4).toFixed(1) +
+      '" text-anchor="middle" font-size="15" font-weight="700" fill="' + tcol + '">' + ELEM_K[i] + '</text>';
+    svg += '<text x="' + pos[i][0].toFixed(1) + '" y="' + (pos[i][1] + 16).toFixed(1) +
+      '" text-anchor="middle" font-size="13" fill="' + tcol + '">' + pct + '%</text>';
+  }
+  svg += '</svg>';
+  return svg;
 }
 })();
 </script>
