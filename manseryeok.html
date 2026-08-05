@@ -132,7 +132,7 @@
         <input type="text" id="msr-region" value="서울" autocomplete="off" placeholder="예: 제천">
         <button type="button" class="msr-sbtn" id="msr-region-btn">지역 검색</button>
       </span>
-      <span class="msr-region-info" id="msr-region-info"></span>
+      <span class="msr-region-info" id="msr-region-info">특별시 서울 · 동경 126.98° · 보정 −32분</span>
     </div>
     <div class="msr-ac-list" id="msr-region-list"></div>
 
@@ -169,7 +169,7 @@
 
     <div class="msr-card">
       <h3>오행 · 십성 분석</h3>
-      <div id="msr-anal"></div>
+      <div id="msr-anal" class="msr-anal-target"></div>
       <p class="msr-note">
         · 오행은 여덟 글자(천간 4 + 지지 4)를, 십성은 일간(나)을 제외한 천간과 각 지지의 정기(대표 지장간)를 기준으로 센 값입니다.
         단순 개수 기준의 참고 지표이며, 지장간 전체·계절의 힘 등을 따지는 정밀 분석과는 다를 수 있습니다.
@@ -497,7 +497,10 @@ if (typeof module !== 'undefined' && module.exports){
 if (typeof document === 'undefined') return;
 
 /* ===================== UI ===================== */
+/* 티스토리 등 블로그 편집기가 id 속성을 지우는 경우가 있어,
+   id로 못 찾으면 class 선택자로 한 번 더 찾는다. */
 function $(id){ return document.getElementById(id); }
+function byIdOrSel(id, sel){ return document.getElementById(id) || document.querySelector(sel); }
 function pad2(n){ return (n < 10 ? '0' : '') + n; }
 function charBox(stem, branch){
   function tile(han, kor, elem){
@@ -507,24 +510,33 @@ function charBox(stem, branch){
            branchTile: tile(BRANCH_H[branch], BRANCH_K[branch], BRANCH_ELEM[branch]) };
 }
 
-$('msr-unknown').addEventListener('change', function(){
-  $('msr-h').disabled = this.checked;
-  $('msr-mi').disabled = this.checked;
-});
+/* 부가 UI 연결은 try/catch로 감싸서, 편집기가 일부 요소를 변형해
+   못 찾더라도 아래의 계산 버튼 동작까지 막히지 않게 한다. */
+try {
+  var unkEl = $('msr-unknown');
+  if (unkEl) unkEl.addEventListener('change', function(){
+    if ($('msr-h')) $('msr-h').disabled = this.checked;
+    if ($('msr-mi')) $('msr-mi').disabled = this.checked;
+  });
+} catch (e0) {}
 
 /* --- 출생 지역 검색 ---
    입력하면 아래에 지역 후보가 칩 형태로 펼쳐지고, 후보를 클릭(탭)해서 선택.
    모바일 터치에서도 동작하도록 click 이벤트와 인라인 목록을 사용. */
-var regionInput = $('msr-region'), regionList = $('msr-region-list'),
-    regionInfo = $('msr-region-info'), regionBtn = $('msr-region-btn');
+var regionInput = byIdOrSel('msr-region', '#msr-app .msr-ac input[type=text]'),
+    regionList = byIdOrSel('msr-region-list', '#msr-app .msr-ac-list'),
+    regionInfo = byIdOrSel('msr-region-info', '#msr-app .msr-region-info'),
+    regionBtn = byIdOrSel('msr-region-btn', '#msr-app .msr-sbtn');
 function fmtAdj(min){ return (min > 0 ? '+' : '−') + Math.abs(min) + '분'; }
 function renderRegionInfo(){
+  if (!regionInfo || !regionInput) return;
   var reg = findRegion(regionInput.value);
   if (reg) regionInfo.textContent = reg[2] + ' ' + reg[0] + ' · 동경 ' + reg[1].toFixed(2) + '° · 보정 ' + fmtAdj(solarAdjOf(reg[1]));
   else regionInfo.textContent = '지역 검색을 눌러 목록에서 선택해 주세요';
 }
-function hideRegionList(){ regionList.style.display = 'none'; }
+function hideRegionList(){ if (regionList) regionList.style.display = 'none'; }
 function showRegionList(){
+  if (!regionList || !regionInput) return;
   var q = regionInput.value.trim(), items = [];
   for (var i = 0; i < REGIONS.length && items.length < 12; i++){
     if (!q || REGIONS[i][0].indexOf(q) !== -1) items.push(REGIONS[i]);
@@ -541,41 +553,50 @@ function showRegionList(){
   regionList.innerHTML = html;
   regionList.style.display = 'flex';
 }
-regionInput.addEventListener('input', function(){ showRegionList(); renderRegionInfo(); });
-regionBtn.addEventListener('click', function(){ showRegionList(); });
-regionList.addEventListener('click', function(ev){
-  var t = ev.target;
-  while (t && t !== regionList && !(t.getAttribute && t.getAttribute('data-name'))) t = t.parentNode;
-  if (!t || t === regionList) return;
-  regionInput.value = t.getAttribute('data-name');
-  hideRegionList();
+try {
+  if (regionInput) regionInput.addEventListener('input', function(){ showRegionList(); renderRegionInfo(); });
+  if (regionBtn) regionBtn.addEventListener('click', function(){ showRegionList(); });
+  if (regionList) regionList.addEventListener('click', function(ev){
+    var t = ev.target;
+    while (t && t !== regionList && !(t.getAttribute && t.getAttribute('data-name'))) t = t.parentNode;
+    if (!t || t === regionList) return;
+    regionInput.value = t.getAttribute('data-name');
+    hideRegionList();
+    renderRegionInfo();
+  });
+  document.addEventListener('click', function(ev){
+    var t = ev.target;
+    while (t){
+      if (t === regionList || t === regionInput || t === regionBtn) return;
+      t = t.parentNode;
+    }
+    hideRegionList();
+  });
+  var solarEl = $('msr-solar');
+  if (solarEl) solarEl.addEventListener('change', function(){
+    if (regionInput) regionInput.disabled = !this.checked;
+    if (regionBtn) regionBtn.disabled = !this.checked;
+    if (regionInfo) regionInfo.style.display = this.checked ? '' : 'none';
+    if (!this.checked) hideRegionList();
+  });
   renderRegionInfo();
-});
-document.addEventListener('click', function(ev){
-  var t = ev.target;
-  while (t){
-    if (t === regionList || t === regionInput || t === regionBtn) return;
-    t = t.parentNode;
-  }
-  hideRegionList();
-});
-$('msr-solar').addEventListener('change', function(){
-  regionInput.disabled = !this.checked;
-  regionBtn.disabled = !this.checked;
-  regionInfo.style.display = this.checked ? '' : 'none';
-  if (!this.checked) hideRegionList();
-});
-renderRegionInfo();
+} catch (e1) {}
 
-$('msr-go').addEventListener('click', function(){
-  var err = $('msr-err');
-  err.style.display = 'none';
+var goBtn = byIdOrSel('msr-go', '#msr-app button.msr-btn');
+if (goBtn) goBtn.addEventListener('click', function(){
+  var err = byIdOrSel('msr-err', '#msr-app .msr-err');
+  if (err) err.style.display = 'none';
   var y = parseInt($('msr-y').value, 10), mo = parseInt($('msr-mo').value, 10), d = parseInt($('msr-d').value, 10);
-  var unknown = $('msr-unknown').checked;
+  var unknown = $('msr-unknown') ? $('msr-unknown').checked : false;
   var h = unknown ? 12 : parseInt($('msr-h').value, 10);
   var mi = unknown ? 0 : parseInt($('msr-mi').value, 10);
 
-  function fail(msg){ err.textContent = msg; err.style.display = 'block'; $('msr-result').style.display = 'none'; }
+  function fail(msg){
+    if (err){ err.textContent = msg; err.style.display = 'block'; }
+    else if (typeof alert !== 'undefined') alert(msg);
+    var res0 = $('msr-result');
+    if (res0) res0.style.display = 'none';
+  }
   if (!y || !mo || !d || isNaN(h) || isNaN(mi)) return fail('생년월일과 시각을 모두 입력해 주세요. (시간을 모르면 "태어난 시간을 몰라요"를 체크)');
   if (y < 1900 || y > 2100) return fail('연도는 1900년부터 2100년까지 지원합니다.');
   if (mo < 1 || mo > 12) return fail('월은 1~12 사이로 입력해 주세요.');
@@ -583,23 +604,32 @@ $('msr-go').addEventListener('click', function(){
   if (d < 1 || d > mdays) return fail(y + '년 ' + mo + '월은 ' + mdays + '일까지 있습니다.');
   if (h < 0 || h > 23 || mi < 0 || mi > 59) return fail('시각은 0~23시, 0~59분 사이로 입력해 주세요.');
 
-  var opts = { unknownTime: unknown, trueSolar: $('msr-solar').checked, jasi: $('msr-jasi').value };
+  var opts = {
+    unknownTime: unknown,
+    trueSolar: $('msr-solar') ? $('msr-solar').checked : true,
+    jasi: $('msr-jasi') ? $('msr-jasi').value : 'ya'
+  };
   if (opts.trueSolar){
-    var reg = findRegion($('msr-region').value);
+    var rname = regionInput ? regionInput.value : '서울';
+    var reg = findRegion(rname);
     if (!reg) return fail('출생 지역을 목록에서 선택해 주세요. (예: 서울, 부산, 강릉 …) 목록에 없는 지역은 가까운 시·군을 선택하면 됩니다.');
     opts.solarAdjMin = solarAdjOf(reg[1]);
     opts.regionName = reg[0];
   }
   var r = calcSaju(y, mo, d, h, mi, opts);
   render(r, opts);
-  $('msr-result').style.display = 'block';
-  $('msr-result').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  var res = $('msr-result');
+  if (res){
+    res.style.display = 'block';
+    if (res.scrollIntoView) res.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
 });
 
 function render(r, opts){
   var yGz = ganzhiIdx(r.year.stem, r.year.branch);
   var timeStr = opts.unknownTime ? '(시간 모름)' : pad2(r.input.h) + ':' + pad2(r.input.mi);
-  $('msr-summary').innerHTML =
+  var sumEl = byIdOrSel('msr-summary', '#msr-app .msr-summary');
+  if (sumEl) sumEl.innerHTML =
     '<b>' + r.input.y + '년 ' + r.input.mo + '월 ' + r.input.d + '일 ' + timeStr + '</b> (양력) 출생 · ' +
     '<b>' + gzKor(yGz) + '(' + gzHan(yGz) + ')년 ' + ANIMALS[r.year.branch] + '띠</b>';
 
@@ -626,7 +656,8 @@ function render(r, opts){
     rowTenB += '<td class="msr-ten">' + tenGod(ds, mainHidden) + '</td>';
     rowJJ += '<td class="msr-jj">' + jjStr + '</td>';
   }
-  $('msr-pillar-body').innerHTML =
+  var pbEl = byIdOrSel('msr-pillar-body', '#msr-app table.msr-pillars tbody');
+  if (pbEl) pbEl.innerHTML =
     rowTenS + '</tr>' + rowStem + '</tr>' + rowBranch + '</tr>' + rowTenB + '</tr>' + rowJJ + '</tr>' +
     '<tr><td colspan="4" class="msr-ten" style="padding-top:8px">위→아래: 십성 / 천간 / 지지 / 십성(지장간 정기 기준) / 지장간</td></tr>';
 
@@ -637,7 +668,8 @@ function render(r, opts){
   if (opts.jasi === 'ya') notes.push('야자시 적용 (23시~24시 출생: 일주 유지, 시주는 다음 날 일간 기준)');
   else notes.push('정자시 적용 (23시부터 다음 날로 계산)');
   var adjStr = r.adj.y + '-' + pad2(r.adj.mo) + '-' + pad2(r.adj.d) + ' ' + pad2(r.adj.h) + ':' + pad2(r.adj.mi);
-  $('msr-adjnote').innerHTML = '적용 보정: ' + notes.join(' · ') +
+  var adjEl = byIdOrSel('msr-adjnote', '#msr-result .msr-card .msr-note');
+  if (adjEl) adjEl.innerHTML = '적용 보정: ' + notes.join(' · ') +
     (opts.unknownTime ? '' : '<br>보정 후 계산 기준 시각: ' + adjStr);
 
   /* --- 오행 개수 (여덟 글자 기준) --- */
@@ -697,10 +729,12 @@ function render(r, opts){
   html += '<p class="msr-anal-sum">가장 많은 오행: <b>' + maxList.join(', ') + ' (' + maxV + '개)</b>' +
     (zeroList.length ? ' · 없는 오행: <b>' + zeroList.join(', ') + '</b>' : ' · 다섯 오행을 모두 갖추었습니다') +
     ' · 가장 강한 십성: <b>' + maxGList.join(', ') + ' (' + maxGV + '개)</b></p>';
-  $('msr-anal').innerHTML = html;
+  var analEl = byIdOrSel('msr-anal', '#msr-result .msr-anal-target');
+  if (analEl) analEl.innerHTML = html;
 
   /* --- 오행 상생·상극 원형도 --- */
-  $('msr-cycle').innerHTML = buildCycleSVG(cnt, total);
+  var cycEl = byIdOrSel('msr-cycle', '#msr-app .msr-cycle-wrap');
+  if (cycEl) cycEl.innerHTML = buildCycleSVG(cnt, total);
 
   /* --- 십성 용어 풀이 표: 내 사주에 있는 십성 강조 + 개수 --- */
   var glossRows = document.querySelectorAll('#msr-app table.msr-gloss tr[data-ten]');
